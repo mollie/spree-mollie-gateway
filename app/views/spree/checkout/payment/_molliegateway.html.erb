@@ -1,0 +1,14 @@
+<% param_prefix = "payment_source[#{payment_method.id}]" %>
+
+<ul class="list-group">
+  <% payment_method.available_payment_methods.each do |method| %>
+    <div class="radio list-group-item clearfix">
+
+      <label class="pull-left">
+        <%= radio_button(param_prefix, :payment_method_name, method.id) %>
+        <%= image_tag(method.image['normal']) %>
+        <%= method.description %>
+      </label>
+    </div>
+  <% end %>
+</ul>
