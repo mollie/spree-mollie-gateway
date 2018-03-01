@@ -73,12 +73,12 @@ bundle exec rails g spree_mollie_gateway:install
 
 ## Configuring Mollie Gateway
 
-1. Configure a new payment method (Spree Admin -> Configurations -> Payment Methods -> New Payment Method).
-2. Select `Spree::Gateway::MollieGateway` as a provider.
-3. Fill in your live / test API key.
+1. Configure a new payment method (`Spree Admin -> Configurations -> Payment Methods -> New Payment Method`).
+2. Select `Spree::Gateway::MollieGateway` as a `Provider`.
+3. Fill in your live / test `API key`.
 4. Fill in your hostname. Used for generating the webhook URL and redirect URL.
-5. Select "Front End" for Auto Capture.
-6. Fill in "Mollie" for Name.
+5. Select "Front End" in the `Display` selectbox.
+6. Fill in "Mollie" for the `Name` field.
 7. Save and you're done!
 
 ## License
