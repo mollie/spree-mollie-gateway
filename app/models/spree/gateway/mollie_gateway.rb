@@ -4,8 +4,6 @@ module Spree
 
     has_many :spree_mollie_transactions, class_name: 'Spree::MollieTransaction'
 
-    GATEWAY_NAME = 'Mollie'
-
     def payment_source_class
       Spree::MollieTransaction
     end
@@ -20,41 +18,6 @@ module Spree
 
     def available_for_order?(order)
       true
-    end
-
-    def name
-      return GATEWAY_NAME if payments.none? || payments.last.source.nil?
-
-      case payments.last.source.payment_method_name
-        when ::Mollie::Method::IDEAL then
-          'iDEAL'
-        when ::Mollie::Method::CREDITCARD then
-          'Credit card'
-        when ::Mollie::Method::MISTERCASH then
-          'Bancontact'
-        when ::Mollie::Method::SOFORT then
-          'SOFORT Banking'
-        when ::Mollie::Method::BANKTRANSFER then
-          'Bank transfer'
-        when ::Mollie::Method::BITCOIN then
-          'Bitcoin'
-        when ::Mollie::Method::PAYPAL then
-          'PayPal'
-        when ::Mollie::Method::KBC then
-          'KBC/CBC Payment Button'
-        when ::Mollie::Method::BELFIUS then
-          'Belfius Pay Button'
-        when ::Mollie::Method::PAYSAFECARD then
-          'paysafecard'
-        when ::Mollie::Method::PODIUMCADEAUKAART then
-          'Podium Cadeaukaart'
-        when ::Mollie::Method::GIFTCARD then
-          'Giftcard'
-        when ::Mollie::Method::INGHOMEPAY then
-          'ING Home\'Pay'
-        else
-          'Mollie'
-      end
     end
 
     # Create a new transaction

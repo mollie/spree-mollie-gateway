@@ -1,3 +1,4 @@
+<% if payment.source.present? %>
 <fieldset data-hook="mollie_payment_source">
   <legend><%= payment.source.name %></legend>
   <table class="table table-condensed table-bordered">
@@ -9,3 +10,8 @@
     <% end %>
   </table>
 </fieldset>
+<% else %>
+  <div class="alert alert-danger">
+    <%= Spree.t(:no_mollie_transactions) %>
+  </div>
+<% end %>
