@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["vernon@mollie.com"]
 
   spec.summary       = %q{Mollie payments for Spree Commerce.}
-  spec.description   = %q{Mollie ayment gateway for Spree Commerce.}
+  spec.description   = %q{Mollie payment gateway for Spree Commerce.}
   spec.homepage      = "https://www.mollie.com"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
