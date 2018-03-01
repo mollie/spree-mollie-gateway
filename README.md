@@ -1,10 +1,17 @@
 [<img src="https://www.mollie.com/assets/images/mollie/logo-black.svg" width="110">](https://www.mollie.com/)
   
-Quickly integrate all major payment methods in Spree Commerce, wherever you need them. Simply drop them ready-made into your WooCommerce webshop with this powerful plugin by Mollie. Mollie is dedicated to making payments better for Spree Commerce.
+Quickly integrate all major payment methods in Spree Commerce, wherever you need them. Simply drop them ready-made into your Spree Commerce webshop with this powerful plugin by Mollie. Mollie is dedicated to making payments better for Spree Commerce.
 
 > Next level payments, for Spree Commerce
 
 No need to spend weeks on paperwork or security compliance procedures. No more lost conversions because you don’t support a shopper’s favorite payment method or because they don’t feel safe. We made payments intuitive and safe for merchants and their customers.
+
+1. [Payment methods](#payment-methods)
+2. [Features](#features)
+3. [Requirements](#requirements)
+4. [Installation](#installation)
+5. [Configuring Mollie Gateway](#configuring-mollie-gateway)
+6. [License](#license)
 
 ## Payment methods
 
@@ -83,4 +90,4 @@ bundle exec rails g spree_mollie_gateway:install
 
 ## License
 [GPLv2 (GNU General Public License, version 2) License](http://www.gnu.org/licenses/gpl-2.0.html).
-Copyright (c) 2014-2017, Mollie B.V.
+Copyright (c) 2018, Mollie B.V.
