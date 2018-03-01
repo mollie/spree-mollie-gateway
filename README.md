@@ -1,35 +1,86 @@
-# SpreeMollieGateway
+[<img src="https://www.mollie.com/assets/images/mollie/logo-black.svg" width="110">](https://www.mollie.com/)
+  
+Quickly integrate all major payment methods in Spree Commerce, wherever you need them. Simply drop them ready-made into your WooCommerce webshop with this powerful plugin by Mollie. Mollie is dedicated to making payments better for Spree Commerce.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/spree_mollie_gateway`. To experiment with that code, run `bin/console` for an interactive prompt.
+> Next level payments, for Spree Commerce
 
-TODO: Delete this and the text above, and describe your gem
+No need to spend weeks on paperwork or security compliance procedures. No more lost conversions because you don’t support a shopper’s favorite payment method or because they don’t feel safe. We made payments intuitive and safe for merchants and their customers.
+
+## Payment methods
+
+Credit cards:
+
+* VISA (International)
+* MasterCard (International)
+* American Express (International)
+* Cartes Bancaires (France)
+* CartaSi (Italy)
+
+Debit cards:
+
+* V Pay (International)
+* Maestro (International)
+
+Alternative payment methods:
+
+* iDEAL (Netherlands)
+* Bancontact (Belgium)
+* Home'Pay (Belgium)
+* PayPal (International)
+* SOFORTbanking (EU)
+* Belfius (Belgium)
+* KBC/CBC payment button (Belgium)
+* SEPA - Credit Transfer (EU)
+* SEPA - Direct Debit (EU)
+* Bitcoin (International)
+* Paysafecard (International)
+* Gift cards (Netherlands)
+
+Please go to the [signup page](https://www.mollie.com/signup) to create a new Mollie account and start receiving payments in a couple of minutes. Contact info@mollie.com if you have any questions or comments about this plugin.
+
+> Our pricing is always per transaction. No startup fees, no monthly fees, and no gateway fees. No hidden fees, period.
+
+## Features
+
+* Support for all available Mollie payment methods.
+* Support for [one-click payments](https://www.mollie.com/en/features/checkout).
+* Transparent pricing. No startup fees, no monthly fees, and no gateway fees. No hidden fees, period.
+* Configurable pay outs: daily, weekly, monthly - whatever you prefer.
+* [Powerful dashboard](https://www.mollie.com/en/features/dashboard) on mollie.com to easily keep track of your payments.
+* Fast in-house support. You will always be helped by someone who knows our products intimately.
+* Multiple translations: English and Dutch.
+* Event log for debugging purposes.
+
+## Requirements
+- Spree 3.4.x or higher.
+- Rails 5.1.x or higher.  
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Open your `Gemfile` and add `spree_mollie_gateway`.
 
 ```ruby
 gem 'spree_mollie_gateway'
 ```
 
-And then execute:
+Install the gem by running `bundle install`.
 
-    $ bundle
+Run the installer which takes care of copying migrations:
 
-Or install it yourself as:
+```bash
+bundle exec rails g spree_mollie_gateway:install
+```
 
-    $ gem install spree_mollie_gateway
+## Configuring Mollie Gateway
 
-## Usage
+1. Configure a new payment method (Spree Admin -> Configurations -> Payment Methods -> New Payment Method).
+2. Select `Spree::Gateway::MollieGateway` as a provider.
+3. Fill in your live / test API key.
+4. Fill in your hostname. Used for generating the webhook URL and redirect URL.
+5. Select "Front End" for Auto Capture.
+6. Fill in "Mollie" for Name.
+7. Save and you're done!
 
-TODO: Write usage instructions here
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/spree_mollie_gateway.
+## License
+[GPLv2 (GNU General Public License, version 2) License](http://www.gnu.org/licenses/gpl-2.0.html).
+Copyright (c) 2014-2017, Mollie B.V.

@@ -1,6 +1,7 @@
 module Spree
   class Gateway::MollieGateway < PaymentMethod
     preference :api_key, :string
+    preference :hostname, :string
 
     has_many :spree_mollie_transactions, class_name: 'Spree::MollieTransaction'
 
@@ -39,13 +40,22 @@ module Spree
       ActiveMerchant::Billing::Response.new(true, 'Transaction created')
     end
 
+    def create_customer(user)
+      Mollie::Customer.create(
+          email: user.email,
+          api_key: get_preference(:api_key),
+          )
+    end
+
     def prepare_transaction_params(order, source)
+      spree_routes = ::Spree::Core::Engine.routes.url_helpers
+
       order_number = order.number
       order_params = {
           amount: order.total.to_f,
           description: "Spree Order ID: #{order_number}",
-          redirectUrl: "http://spree.vndg.com:3000/mollie/validate_payment/#{order_number}",
-          webhookUrl: "https://a775808b.ngrok.io/mollie/update_payment_status/#{order_number}",
+          redirectUrl: spree_routes.mollie_validate_payment_mollie_url(order_number: order_number, host: get_preference(:hostname)),
+          webhookUrl: spree_routes.mollie_update_payment_status_mollie_url(order_number: order_number, host: get_preference(:hostname)),
           method: source.payment_method_name,
           metadata: {
               order_id: order_number
@@ -53,11 +63,17 @@ module Spree
           api_key: get_preference(:api_key),
       }
 
-      # Add additional information based on payment method.
       if order.user_id.present?
         if source.payment_method_name.match(Regexp.union([::Mollie::Method::BITCOIN, ::Mollie::Method::BANKTRANSFER, ::Mollie::Method::GIFTCARD]))
           order_params.merge! ({
               billingEmail: order.user.email
+          })
+        end
+
+        # Allow single click payments by passing Mollie customer ID
+        if order.user.mollie_customer_id.present?
+          order_params.merge! ({
+              customerId: order.user.mollie_customer_id
           })
         end
       end
