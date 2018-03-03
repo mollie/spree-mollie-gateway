@@ -24,9 +24,14 @@ module Spree
     # Create a new transaction
     def create_transaction(money, source, gateway_options)
       payment = payments.last
+
+      MollieLogger.debug("Create payment for order #{payment.order.number}")
+
       transaction = ::Mollie::Payment.create(
           prepare_transaction_params(payment.order, source)
       )
+
+      MollieLogger.debug("Payment #{payment.order.number} created for order #{payment.order.number}")
 
       invalidate_prev_transactions(payment.id)
 
@@ -41,16 +46,18 @@ module Spree
     end
 
     def create_customer(user)
-      Mollie::Customer.create(
+      customer = Mollie::Customer.create(
           email: user.email,
           api_key: get_preference(:api_key),
           )
+      MollieLogger.debug("Created a Mollie Customer for Spree user with ID #{customer.id}")
+      customer
     end
 
     def prepare_transaction_params(order, source)
       spree_routes = ::Spree::Core::Engine.routes.url_helpers
-
       order_number = order.number
+
       order_params = {
           amount: order.total.to_f,
           description: "Spree Order ID: #{order_number}",
@@ -94,6 +101,8 @@ module Spree
           mollie_transaction_id,
           api_key: get_preference(:api_key)
       )
+
+      MollieLogger.debug("Updating order state for payment. Payment has state #{transaction.status}")
 
       unless payment.completed?
         case transaction.status

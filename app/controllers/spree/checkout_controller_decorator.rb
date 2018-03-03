@@ -7,6 +7,8 @@ module Spree
           payment.create_transaction!
           mollie_payment_url = payment.payment_source.payment_url
 
+          MollieLogger.debug("For order #{@order.number} redirect user to payment URL: #{mollie_payment_url}")
+
           redirect_to mollie_payment_url
         else
           render :edit

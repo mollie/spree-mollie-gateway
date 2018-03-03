@@ -10,6 +10,8 @@ module Spree
       mollie = Spree::PaymentMethod.find_by_type('Spree::Gateway::MollieGateway')
       mollie.update_payment_status(payment)
 
+      MollieLogger.debug("Redirect URL visited for order #{params[:order_number]}")
+
       redirect_to order.reload.paid? ? order_path(order) : checkout_state_path(:payment)
     end
 
@@ -19,6 +21,8 @@ module Spree
       payment = Spree::Payment.find_by_response_code(params[:id])
       mollie = Spree::PaymentMethod.find_by_type('Spree::Gateway::MollieGateway')
       mollie.update_payment_status(payment)
+
+      MollieLogger.debug("Webhook called for payment #{params[:id]}")
 
       render json: 'OK'
     end
