@@ -4,7 +4,7 @@ Mollie::Client.class_eval do
     @api_key = api_key
     @version_strings = []
 
-    add_version_string 'Mollie for Spree Commerce/' << Mollie::VERSION
+    add_version_string 'MollieSpreeCommerce/' << SpreeMollieGateway::VERSION
     add_version_string 'Ruby/' << RUBY_VERSION
     add_version_string OpenSSL::OPENSSL_VERSION.split(' ').slice(0, 2).join '/'
   end
