@@ -10,7 +10,7 @@ module Spree
     end
 
     def provider_class
-      ::Mollie::Provider
+      ::Mollie::Client
     end
 
     def source_required?
