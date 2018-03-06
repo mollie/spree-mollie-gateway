@@ -88,6 +88,12 @@ module Spree
       order_params
     end
 
+    def api_payment_url
+      payment = payments.last
+      payment.create_transaction!
+      payment.payment_source.payment_url
+    end
+
     def available_payment_methods
       ::Mollie::Method.all(
           api_key: get_preference(:api_key),
@@ -126,6 +132,7 @@ module Spree
       payments.with_state('processing').or(payments.with_state('pending')).where.not(id: current_payment_id).each do |payment|
         # Set internal payment state to failed
         payment.failure! unless payment.store_credit?
+        MollieLogger.debug("Invalidating previous payment: #{payment.number}") unless payment.store_credit?
       end
     end
   end
