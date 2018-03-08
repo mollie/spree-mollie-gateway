@@ -18,13 +18,13 @@ module Spree
     # Mollie might send us information about a transaction through the webhook.
     # We should update the payment state accordingly.
     def update_payment_status
+      MollieLogger.debug("Webhook called for payment #{params[:id]}")
+
       payment = Spree::Payment.find_by_response_code(params[:id])
       mollie = Spree::PaymentMethod.find_by_type('Spree::Gateway::MollieGateway')
       mollie.update_payment_status(payment)
 
-      MollieLogger.debug("Webhook called for payment #{params[:id]}")
-
-      render json: 'OK'
+      head :ok
     end
   end
 end

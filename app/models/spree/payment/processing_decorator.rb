@@ -3,8 +3,4 @@ Spree::Payment::Processing.module_eval do
     started_processing!
     gateway_action(source, :create_transaction, :pend)
   end
-
-  def process!
-    create_transaction!
-  end
 end

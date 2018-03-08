@@ -1,7 +1,7 @@
 module Spree
   class MollieTransaction < Spree::Base
     belongs_to :payment_method
-    has_many :payment, as: :source
+    has_many :payments, as: :source
 
     def actions
       []

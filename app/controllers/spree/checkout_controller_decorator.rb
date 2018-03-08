@@ -1,5 +1,6 @@
 module Spree
   module CheckoutWithMollie
+    # If we're currently in the checkout
     def update
       if payment_params_valid? && paying_with_mollie?
         if @order.update_from_params(params, permitted_checkout_attributes, request.headers.env)
@@ -29,7 +30,7 @@ module Spree
 
     def paying_with_mollie?
       payment_method = PaymentMethod.find(payment_method_id_param)
-      payment_method.is_a?(Gateway::MollieGateway)
+      payment_method.is_a? Gateway::MollieGateway
     end
 
     def payment_params_valid?

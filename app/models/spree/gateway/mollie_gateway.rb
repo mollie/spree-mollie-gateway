@@ -17,6 +17,12 @@ module Spree
       true
     end
 
+    # Use the purchase action (which is called because auto_capture is true)
+    # to create a new Mollie payment.
+    def authorize(*args)
+      ActiveMerchant::Billing::Response.new(true, 'Transaction created via API')
+    end
+
     def available_for_order?(order)
       true
     end
@@ -88,12 +94,6 @@ module Spree
       order_params
     end
 
-    def api_payment_url
-      payment = payments.last
-      payment.create_transaction!
-      payment.payment_source.payment_url
-    end
-
     def available_payment_methods
       ::Mollie::Method.all(
           api_key: get_preference(:api_key),
@@ -110,23 +110,24 @@ module Spree
 
       MollieLogger.debug("Updating order state for payment. Payment has state #{transaction.status}")
 
-      unless payment.completed?
-        case transaction.status
-          when 'paid'
-            payment.complete! unless payment.completed?
-            payment.order.finalize!
-            payment.order.update_attributes(:state => 'complete', :completed_at => Time.now)
-          when 'cancelled', 'expired', 'failed'
-            payment.failure! unless payment.failed?
-          else
-            logger.debug 'Unhandled Mollie payment state received. Therefore we did not update the payment state.'
-        end
+      case transaction.status
+        when 'paid'
+          payment.complete! unless payment.completed?
+          payment.order.finalize!
+          payment.order.update_attributes(:state => 'complete', :completed_at => Time.now)
+        when 'cancelled', 'expired', 'failed'
+          payment.failure! unless payment.failed?
+        when 'refunded'
+          payment.void! unless payment.void?
+        else
+          MollieLogger.debug("Unhandled Mollie payment state received. Therefore we did not update the payment state.")
       end
 
       payment.source.update(status: payment.state)
     end
 
     private
+
     def invalidate_prev_transactions(current_payment_id)
       # Cancel all previous payment which are pending or are still being processed
       payments.with_state('processing').or(payments.with_state('pending')).where.not(id: current_payment_id).each do |payment|
