@@ -17,12 +17,6 @@ module Spree
       true
     end
 
-    # Use the purchase action (which is called because auto_capture is true)
-    # to create a new Mollie payment.
-    def authorize(*args)
-      ActiveMerchant::Billing::Response.new(true, 'Transaction created via API')
-    end
-
     def available_for_order?(order)
       true
     end
