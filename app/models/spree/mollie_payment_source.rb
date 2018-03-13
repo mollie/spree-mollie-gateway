@@ -1,14 +1,13 @@
 module Spree
-  class MollieTransaction < Spree::Base
+  class MolliePaymentSource < Spree::Base
     belongs_to :payment_method
-    has_many :payments, as: :source
 
     def actions
       []
     end
 
     def method_type
-      'mollie_transaction'
+      'mollie_payment_source'
     end
 
     def name
@@ -48,6 +47,12 @@ module Spree
       api_key = payment_method.get_preference(:api_key)
       mollie_payment = ::Mollie::Payment.get(payment_id, api_key: api_key)
       mollie_payment.attributes
+    end
+
+    def self.create_from_params(params)
+      create!(payment_id: params[:pa],
+              braintree_last_digits: params[:braintree_last_two],
+              braintree_card_type: type)
     end
   end
 end

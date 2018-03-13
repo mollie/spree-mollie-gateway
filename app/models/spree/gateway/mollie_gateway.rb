@@ -3,16 +3,17 @@ module Spree
     preference :api_key, :string
     preference :hostname, :string
 
-    has_many :spree_mollie_transactions, class_name: 'Spree::MollieTransaction'
+    has_many :spree_mollie_payment_sources, class_name: 'Spree::MolliePaymentSource'
 
     def payment_source_class
-      Spree::MollieTransaction
+      Spree::MolliePaymentSource
     end
 
     def provider_class
       ::Mollie::Client
     end
 
+    # Always create a source which references to the selected Mollie payment method.
     def source_required?
       true
     end
@@ -21,9 +22,22 @@ module Spree
       true
     end
 
-    # Create a new transaction
-    def create_transaction(money, source, gateway_options)
-      payment = payments.last
+    def can_capture?
+      false
+    end
+
+    def authorize(money_in_cents, source, gateway_options)
+      purchase money_in_cents, source, gateway_options
+    end
+
+    def purchase(money_in_cents, source, gateway_options)
+      puts "money in cents"
+      puts money_in_cents
+    end
+
+    # Create a new Mollie payment.
+    def create_transaction(order)
+      payment = order.payments.last
 
       MollieLogger.debug("Create payment for order #{payment.order.number}")
 
@@ -45,6 +59,8 @@ module Spree
       ActiveMerchant::Billing::Response.new(true, 'Transaction created')
     end
 
+    # Create a Mollie customer which can be passed with a transaction.
+    # Required for one-click Mollie payments.
     def create_customer(user)
       customer = Mollie::Customer.create(
           email: user.email,
@@ -77,7 +93,7 @@ module Spree
           })
         end
 
-        # Allow single click payments by passing Mollie customer ID
+        # Allow one-click payments by passing Mollie customer ID.
         if order.user.mollie_customer_id.present?
           order_params.merge! ({
               customerId: order.user.mollie_customer_id
