@@ -1,5 +1,5 @@
 module Spree
-  class Gateway::MollieGateway < PaymentMethod
+  class Gateway::MollieGateway < Gateway
     preference :api_key, :string
     preference :hostname, :string
 
@@ -7,6 +7,10 @@ module Spree
 
     def payment_source_class
       Spree::MolliePaymentSource
+    end
+
+    def actions
+      %w{authorize purchase capture credit}
     end
 
     def provider_class
@@ -22,38 +26,33 @@ module Spree
       true
     end
 
-    def can_capture?
-      false
+    def auto_capture?
+      true
     end
 
-    def authorize(money_in_cents, source, gateway_options)
-      purchase money_in_cents, source, gateway_options
-    end
-
-    def purchase(money_in_cents, source, gateway_options)
-      puts "money in cents"
-      puts money_in_cents
+    def credit(amount, source, gateway_options)
+      create_transaction amount, source, gateway_options
     end
 
     # Create a new Mollie payment.
-    def create_transaction(order)
-      payment = order.payments.last
+    def create_transaction(money_in_cents, source, gateway_options)
+      MollieLogger.debug("Create payment for order #{gateway_options[:order_id]}")
 
-      MollieLogger.debug("Create payment for order #{payment.order.number}")
-
-      transaction = ::Mollie::Payment.create(
-          prepare_transaction_params(payment.order, source)
+      mollie_payment = ::Mollie::Payment.create(
+        prepare_payment_params(money_in_cents, source, gateway_options)
       )
 
-      MollieLogger.debug("Payment #{payment.order.number} created for order #{payment.order.number}")
+      MollieLogger.debug("Payment #{mollie_payment.id} created for order #{gateway_options[:order_id]}")
 
-      invalidate_prev_transactions(payment.id)
+      # payment.response_code = mollie_payment.id
+      # payment.save!
 
-      payment.response_code = transaction.id
-      payment.save!
+      puts "#" * 100
+      puts mollie_payment
 
-      source.payment_id = transaction.id
-      source.payment_url = transaction.payment_url
+      source.status = mollie_payment.status
+      source.payment_id = mollie_payment.id
+      source.payment_url = mollie_payment.payment_url
       source.save!
 
       ActiveMerchant::Billing::Response.new(true, 'Transaction created')
@@ -70,15 +69,23 @@ module Spree
       customer
     end
 
-    def prepare_transaction_params(order, source)
+    def prepare_payment_params(money_in_cents, source, gateway_options)
       spree_routes = ::Spree::Core::Engine.routes.url_helpers
-      order_number = order.number
+      order_number = gateway_options[:order_id]
+      customer_id = gateway_options[:customer_id]
+      amount = money_in_cents / 100.0
 
       order_params = {
-          amount: order.total.to_f,
+          amount: amount,
           description: "Spree Order ID: #{order_number}",
-          redirectUrl: spree_routes.mollie_validate_payment_mollie_url(order_number: order_number, host: get_preference(:hostname)),
-          webhookUrl: spree_routes.mollie_update_payment_status_mollie_url(order_number: order_number, host: get_preference(:hostname)),
+          redirectUrl: spree_routes.mollie_validate_payment_mollie_url(
+              order_number: order_number,
+              host: get_preference(:hostname)
+          ),
+          webhookUrl: spree_routes.mollie_update_payment_status_mollie_url(
+              order_number: order_number,
+              host: get_preference(:hostname)
+          ),
           method: source.payment_method_name,
           metadata: {
               order_id: order_number
@@ -86,19 +93,19 @@ module Spree
           api_key: get_preference(:api_key),
       }
 
-      if order.user_id.present?
+      if customer_id.present?
         if source.payment_method_name.match(Regexp.union([::Mollie::Method::BITCOIN, ::Mollie::Method::BANKTRANSFER, ::Mollie::Method::GIFTCARD]))
           order_params.merge! ({
-              billingEmail: order.user.email
+              billingEmail: gateway_options[:email]
           })
         end
 
         # Allow one-click payments by passing Mollie customer ID.
-        if order.user.mollie_customer_id.present?
-          order_params.merge! ({
-              customerId: order.user.mollie_customer_id
-          })
-        end
+        # if customer_id.present?
+        #   order_params.merge! ({
+        #       customerId: customer_id
+        #   })
+        # end
       end
 
       order_params

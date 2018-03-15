@@ -20,6 +20,7 @@ module Spree
     def update_payment_status
       MollieLogger.debug("Webhook called for payment #{params[:id]}")
 
+
       payment = Spree::Payment.find_by_response_code(params[:id])
       mollie = Spree::PaymentMethod.find_by_type('Spree::Gateway::MollieGateway')
       mollie.update_payment_status(payment)

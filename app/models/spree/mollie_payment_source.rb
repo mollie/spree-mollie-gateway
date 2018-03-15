@@ -2,6 +2,7 @@ module Spree
   class MolliePaymentSource < Spree::Base
     belongs_to :payment_method
 
+
     def actions
       []
     end
@@ -50,9 +51,8 @@ module Spree
     end
 
     def self.create_from_params(params)
-      create!(payment_id: params[:pa],
-              braintree_last_digits: params[:braintree_last_two],
-              braintree_card_type: type)
+      create!(payment_method_name: params[:payment_method_name],
+              status: 'open')
     end
   end
 end

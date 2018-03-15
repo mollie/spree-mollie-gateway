@@ -1,6 +1,12 @@
 Spree::Payment::Processing.module_eval do
-  def create_transaction!
+  def process!(amount = nil)
+    amount ||= money.money.cents
     started_processing!
-    gateway_action(source, :create_transaction, :pend)
+    response = payment_method.create_transaction(
+        amount,
+        source,
+        gateway_options
+    )
+    handle_response(response, :pend, :failure)
   end
 end
