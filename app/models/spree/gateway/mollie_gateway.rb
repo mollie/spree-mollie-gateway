@@ -1,5 +1,5 @@
 module Spree
-  class Gateway::MollieGateway < Gateway
+  class Gateway::MollieGateway < PaymentMethod
     preference :api_key, :string
     preference :hostname, :string
 

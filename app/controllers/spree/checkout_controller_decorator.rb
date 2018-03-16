@@ -5,7 +5,7 @@ module Spree
       if payment_params_valid? && paying_with_mollie?
         if @order.update_from_params(params, permitted_checkout_attributes, request.headers.env)
           payment = @order.payments.last
-          payment.create_transaction!
+          payment.process!
           mollie_payment_url = payment.payment_source.payment_url
 
           MollieLogger.debug("For order #{@order.number} redirect user to payment URL: #{mollie_payment_url}")
