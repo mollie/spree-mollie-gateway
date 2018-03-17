@@ -46,7 +46,7 @@ bundle exec rails g spree_mollie_gateway:install
 
 ## Configuring Mollie Gateway
 
-<img src="https://info.mollie.com/hubfs/configuration.jpg" alt="Add new Payment Method. />
+<img src="https://info.mollie.com/hubfs/configuration.jpg" alt="Add new Payment Method." />
 
 1. Configure a new payment method (`Spree Admin -> Configurations -> Payment Methods -> New Payment Method`).
 2. Select `Spree::Gateway::MollieGateway` as a `Provider`.
