@@ -30,25 +30,15 @@ module Spree
       true
     end
 
-    def credit(amount, source, gateway_options)
-      create_transaction amount, source, gateway_options
-    end
-
     # Create a new Mollie payment.
     def create_transaction(money_in_cents, source, gateway_options)
-      MollieLogger.debug("Create payment for order #{gateway_options[:order_id]}")
+      MollieLogger.debug("About to create payment for order #{gateway_options[:order_id]}")
 
       mollie_payment = ::Mollie::Payment.create(
-        prepare_payment_params(money_in_cents, source, gateway_options)
+          prepare_payment_params(money_in_cents, source, gateway_options)
       )
 
       MollieLogger.debug("Payment #{mollie_payment.id} created for order #{gateway_options[:order_id]}")
-
-      # payment.response_code = mollie_payment.id
-      # payment.save!
-
-      puts "#" * 100
-      puts mollie_payment
 
       source.status = mollie_payment.status
       source.payment_id = mollie_payment.id
@@ -58,7 +48,7 @@ module Spree
       ActiveMerchant::Billing::Response.new(true, 'Transaction created')
     end
 
-    # Create a Mollie customer which can be passed with a transaction.
+    # Create a Mollie customer which can be passed with a payment.
     # Required for one-click Mollie payments.
     def create_customer(user)
       customer = Mollie::Customer.create(
@@ -100,12 +90,14 @@ module Spree
           })
         end
 
+        mollie_customer_id = Spree::User.find(customer_id).mollie_customer_id
+
         # Allow one-click payments by passing Mollie customer ID.
-        # if customer_id.present?
-        #   order_params.merge! ({
-        #       customerId: customer_id
-        #   })
-        # end
+        if mollie_customer_id.present?
+          order_params.merge! ({
+              customerId: customer_id
+          })
+        end
       end
 
       order_params
@@ -119,7 +111,7 @@ module Spree
     end
 
     def update_payment_status(payment)
-      mollie_transaction_id = payment.response_code
+      mollie_transaction_id = payment.source.payment_id
       transaction = ::Mollie::Payment.get(
           mollie_transaction_id,
           api_key: get_preference(:api_key)
@@ -137,21 +129,10 @@ module Spree
         when 'refunded'
           payment.void! unless payment.void?
         else
-          MollieLogger.debug("Unhandled Mollie payment state received. Therefore we did not update the payment state.")
+          MollieLogger.debug('Unhandled Mollie payment state received. Therefore we did not update the payment state.')
       end
 
       payment.source.update(status: payment.state)
-    end
-
-    private
-
-    def invalidate_prev_transactions(current_payment_id)
-      # Cancel all previous payment which are pending or are still being processed
-      payments.with_state('processing').or(payments.with_state('pending')).where.not(id: current_payment_id).each do |payment|
-        # Set internal payment state to failed
-        payment.failure! unless payment.store_credit?
-        MollieLogger.debug("Invalidating previous payment: #{payment.number}") unless payment.store_credit?
-      end
     end
   end
 end

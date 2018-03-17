@@ -1,7 +1,7 @@
 module Spree
   class MolliePaymentSource < Spree::Base
     belongs_to :payment_method
-
+    has_many :payments, as: :source
 
     def actions
       []
@@ -48,11 +48,6 @@ module Spree
       api_key = payment_method.get_preference(:api_key)
       mollie_payment = ::Mollie::Payment.get(payment_id, api_key: api_key)
       mollie_payment.attributes
-    end
-
-    def self.create_from_params(params)
-      create!(payment_method_name: params[:payment_method_name],
-              status: 'open')
     end
   end
 end
