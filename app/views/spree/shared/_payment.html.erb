@@ -11,7 +11,7 @@
   </span>
   <br />
   <span class="full-name"><%= source.name %></span>
-<% elsif source.is_a?(Spree::MollieTransaction) %>
+<% elsif source.is_a?(Spree::MolliePaymentSource) %>
   <span class="full-name"><%= source.name %></span>
 <% else %>
   <%= content_tag(:span, payment.payment_method.name) %>
