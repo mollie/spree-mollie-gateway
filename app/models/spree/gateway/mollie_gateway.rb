@@ -10,7 +10,7 @@ module Spree
     end
 
     def actions
-      %w{authorize purchase capture credit}
+      []
     end
 
     def provider_class
