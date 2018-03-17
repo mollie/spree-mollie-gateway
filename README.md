@@ -12,8 +12,7 @@ Please go to the [signup page](https://www.mollie.com/signup) to create a new Mo
 2. [Requirements](#requirements)
 3. [Installation](#installation)
 4. [Configuring Mollie Gateway](#configuring-mollie-gateway)
-5. [Developing](#configuring-mollie-gateway)
-6. [License](#license)
+5. [License](#license)
 
 ## Features
 
