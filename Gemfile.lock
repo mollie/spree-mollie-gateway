@@ -1,8 +1,8 @@
 PATH
   remote: .
   specs:
-    spree_mollie_gateway (0.1.0)
-      mollie-api-ruby (~> 3.1.3)
+    spree_mollie_gateway (0.1.1)
+      mollie-api-ruby (~> 3.1, >= 3.1.3)
 
 GEM
   remote: https://rubygems.org/
