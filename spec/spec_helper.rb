@@ -1,5 +1,6 @@
-require "bundler/setup"
-require "spree_mollie_gateway"
+require 'bundler/setup'
+require 'action_controller/railtie'
+require 'spree_mollie_gateway'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

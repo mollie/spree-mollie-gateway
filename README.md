@@ -21,6 +21,7 @@ Please go to the [signup page](https://www.mollie.com/signup) to create a new Mo
 * Support for [one-click payments](https://www.mollie.com/en/features/checkout).
 * Fast in-house support. You will always be helped by someone who knows our products intimately.
 * Multiple translations: English and Dutch.
+* Refund orders from the Spree admin.
 * Event log for <a href="docs/debugging.md">debugging purposes</a>.
 * Available for `spree_api` and `spree_frontend`.
 * Allow returning customers to <a href="https://www.mollie.com/en/features/checkout" title="One-click payments">use their previous payment details</a> and pay instantly.
@@ -57,7 +58,9 @@ bundle exec rails g spree_mollie_gateway:install
 7. Save and you're done!
 
 ## API endpoints
-This gateway comes with a couple of API endpoints which seamlessly integrate with the Spree API. <a href="docs/api">Overview of the available API endpoints.</a>  
+This gateway comes with a couple of API endpoints which seamlessly integrate with the Spree API.
+
+<a href="docs/api">Overview of available API endpoints.</a>  
 
 ## License
 BSD (Berkeley Software Distribution) License. Copyright (c) 2014-2018, Mollie B.V.

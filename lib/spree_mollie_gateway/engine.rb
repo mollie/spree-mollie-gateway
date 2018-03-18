@@ -11,7 +11,7 @@ module SpreeMollieGateway
         Rails.configuration.cache_classes ? require(c) : load(c)
       end
 
-      Rails.application.config.spree.payment_methods << Spree::Gateway::MollieGateway
+      ::Rails.application.config.spree.payment_methods << Spree::Gateway::MollieGateway
       Spree::PermittedAttributes.source_attributes << :payment_method_name
       Spree::Api::ApiHelpers.payment_source_attributes << :payment_method_name
       Spree::Api::ApiHelpers.payment_source_attributes << :payment_url
