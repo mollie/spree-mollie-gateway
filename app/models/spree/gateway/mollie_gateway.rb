@@ -39,16 +39,16 @@ module Spree
             prepare_payment_params(money_in_cents, source, gateway_options)
         )
         MollieLogger.debug("Payment #{mollie_payment.id} created for order #{gateway_options[:order_id]}")
+
+        source.status = mollie_payment.status
+        source.payment_id = mollie_payment.id
+        source.payment_url = mollie_payment.payment_url
+        source.save!
+        ActiveMerchant::Billing::Response.new(true, 'Payment created')
       rescue Mollie::Exception => e
-        MollieLogger.debug("Could not crate payment for order #{gateway_options[:order_id]}: #{e.message}")
+        MollieLogger.debug("Could not create payment for order #{gateway_options[:order_id]}: #{e.message}")
+        ActiveMerchant::Billing::Response.new(false, 'Payment could not be created')
       end
-
-      source.status = mollie_payment.status
-      source.payment_id = mollie_payment.id
-      source.payment_url = mollie_payment.payment_url
-      source.save!
-
-      ActiveMerchant::Billing::Response.new(true, 'Transaction created')
     end
 
     # Create a Mollie customer which can be passed with a payment.
@@ -106,6 +106,7 @@ module Spree
       order_params
     end
 
+    # Create a new Mollie refund
     def credit(credit_cents, payment_id, options)
       order_number = options[:originator].try(:payment).try(:order).try(:number)
       MollieLogger.debug("Starting refund for order #{order_number}")
@@ -115,10 +116,10 @@ module Spree
         refund = Mollie::Payment::Refund.create(
             payment_id: payment_id,
             amount: amount,
-            description: "Refund for Spree Order ID: #{order_number}",
+            description: "Refund Spree Order ID: #{order_number}",
             api_key: get_preference(:api_key)
         )
-        MollieLogger.debug("Succesfully refunded #{amount} for order #{order_number}")
+        MollieLogger.debug("Successfully refunded #{amount} for order #{order_number}")
         ActiveMerchant::Billing::Response.new(true, 'Refund successful')
       rescue Mollie::Exception => e
         MollieLogger.debug("Refund failed for order #{order_number}: #{e.message}")
