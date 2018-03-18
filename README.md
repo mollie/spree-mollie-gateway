@@ -23,6 +23,7 @@ Please go to the [signup page](https://www.mollie.com/signup) to create a new Mo
 * Multiple translations: English and Dutch.
 * Event log for debugging purposes.
 * Available for `spree_api` and `spree_frontend`.
+* Allow returning customers to <a href="https://www.mollie.com/en/features/checkout" title="One-click payments">use their previous payment details</a> and pay instantly.
 
 ## Requirements
 - Spree 3.4.x or newer.
@@ -56,65 +57,7 @@ bundle exec rails g spree_mollie_gateway:install
 7. Save and you're done!
 
 ## API endpoints
-
-### Get Mollie payment methods
-
-Returns a list of Mollie payment methods (and its issuers) which are enabled for your website profile.
-
-#### Example request
-
-```bash
-curl "http://localhost:3000/api/v1/mollie/methods" \
-     -H 'Content-Type: application/json; charset=utf-8'
-```
-
-#### Response
-
-```bash
-HTTP/1.1 200 OK
-Content-Type: application/json; charset=utf-8
-
-[
-  {
-    "attributes": {
-      "resource": "method",
-      "id": "ideal",
-      "description": "iDEAL",
-      "amount": {
-        "minimum": "0.01",
-        "maximum": "50000.00"
-      },
-      "image": {
-        "normal": "https://www.mollie.com/images/payscreen/methods/ideal.png",
-        "bigger": "https://www.mollie.com/images/payscreen/methods/ideal%402x.png"
-      },
-      "issuers": [
-        {
-          "resource": "issuer",
-          "id": "ideal_TESTNL99",
-          "name": "TBM Bank",
-          "method": "ideal",
-          "image": {
-            "normal": "https://www.mollie.com/images/checkout/v2/ideal-issuer-icons/TESTNL99.png",
-            "bigger": "https://www.mollie.com/images/checkout/v2/ideal-issuer-icons/TESTNL99%402x.png"
-          }
-        }
-      ]
-    },
-    "id": "ideal",
-    "description": "iDEAL",
-    "amount": {
-      "minimum": "0.01",
-      "maximum": "50000.00"
-    },
-    "image": {
-      "normal": "https://www.mollie.com/images/payscreen/methods/ideal.png",
-      "bigger": "https://www.mollie.com/images/payscreen/methods/ideal%402x.png"
-    }
-  }
-]
-
-```
+This gateway comes with a couple of API endpoints which seamlessly integrate with the Spree API. <a href="docs/api">View an overview of the available API endpoints.</a>  
 
 ## License
-BSD (Berkeley Software Distribution) License. Copyright (c) 2014-2017, Mollie B.V.
+BSD (Berkeley Software Distribution) License. Copyright (c) 2014-2018, Mollie B.V.
