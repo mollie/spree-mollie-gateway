@@ -21,6 +21,6 @@ D, [2018-03-17T16:55:28.384232 #45974] DEBUG -- : Redirect URL visited for order
 D, [2018-03-17T17:11:06.855310 #45974] DEBUG -- : Webhook called for payment tr_12345678
 D, [2018-03-17T17:11:09.569485 #45974] DEBUG -- : Updating order state for payment. Payment has state expired
 D, [2018-03-18T13:58:14.360501 #54712] DEBUG -- : Starting refund for order R287180370
-D, [2018-03-18T13:58:18.992075 #54712] DEBUG -- : Succesfully refunded 0.01 for order R287180370
-D, [2018-03-18T14:12:10.495217 #54712] DEBUG -- : Could not crate payment for order R541579556-PEKXA7RN: Unauthorized request
+D, [2018-03-18T13:58:18.992075 #54712] DEBUG -- : Successfully refunded 0.01 for order R287180370
+D, [2018-03-18T14:12:10.495217 #54712] DEBUG -- : Could not create payment for order R541579556-PEKXA7RN: Unauthorized request
 ```
