@@ -57,7 +57,7 @@ bundle exec rails g spree_mollie_gateway:install
 7. Save and you're done!
 
 ## API endpoints
-This gateway comes with a couple of API endpoints which seamlessly integrate with the Spree API. <a href="docs/api">View an overview of the available API endpoints.</a>  
+This gateway comes with a couple of API endpoints which seamlessly integrate with the Spree API. <a href="docs/api">Overview of the available API endpoints.</a>  
 
 ## License
 BSD (Berkeley Software Distribution) License. Copyright (c) 2014-2018, Mollie B.V.
