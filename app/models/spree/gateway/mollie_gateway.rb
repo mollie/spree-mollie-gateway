@@ -10,7 +10,7 @@ module Spree
     end
 
     def actions
-      []
+      %w{credit}
     end
 
     def provider_class
@@ -34,11 +34,14 @@ module Spree
     def create_transaction(money_in_cents, source, gateway_options)
       MollieLogger.debug("About to create payment for order #{gateway_options[:order_id]}")
 
-      mollie_payment = ::Mollie::Payment.create(
-          prepare_payment_params(money_in_cents, source, gateway_options)
-      )
-
-      MollieLogger.debug("Payment #{mollie_payment.id} created for order #{gateway_options[:order_id]}")
+      begin
+        mollie_payment = ::Mollie::Payment.create(
+            prepare_payment_params(money_in_cents, source, gateway_options)
+        )
+        MollieLogger.debug("Payment #{mollie_payment.id} created for order #{gateway_options[:order_id]}")
+      rescue Mollie::Exception => e
+        MollieLogger.debug("Could not crate payment for order #{gateway_options[:order_id]}: #{e.message}")
+      end
 
       source.status = mollie_payment.status
       source.payment_id = mollie_payment.id
@@ -101,6 +104,26 @@ module Spree
       end
 
       order_params
+    end
+
+    def credit(credit_cents, payment_id, options)
+      order_number = options[:originator].try(:payment).try(:order).try(:number)
+      MollieLogger.debug("Starting refund for order #{order_number}")
+
+      begin
+        amount = credit_cents / 100.0
+        refund = Mollie::Payment::Refund.create(
+            payment_id: payment_id,
+            amount: amount,
+            description: "Refund for Spree Order ID: #{order_number}",
+            api_key: get_preference(:api_key)
+        )
+        MollieLogger.debug("Succesfully refunded #{amount} for order #{order_number}")
+        ActiveMerchant::Billing::Response.new(true, 'Refund successful')
+      rescue Mollie::Exception => e
+        MollieLogger.debug("Refund failed for order #{order_number}: #{e.message}")
+        ActiveMerchant::Billing::Response.new(false, 'Refund unsuccessful')
+      end
     end
 
     def available_payment_methods
