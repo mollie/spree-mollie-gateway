@@ -1,4 +1,6 @@
 Spree::Payment.class_eval do
+  delegate :transaction_id, to: :source
+
   def build_source
     return unless new_record?
     if source_attributes.present? && source.blank? && payment_method.try(:payment_source_class)

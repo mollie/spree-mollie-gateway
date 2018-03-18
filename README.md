@@ -21,7 +21,7 @@ Please go to the [signup page](https://www.mollie.com/signup) to create a new Mo
 * Support for [one-click payments](https://www.mollie.com/en/features/checkout).
 * Fast in-house support. You will always be helped by someone who knows our products intimately.
 * Multiple translations: English and Dutch.
-* Event log for debugging purposes.
+* Event log for <a href="docs/debugging.md">debugging purposes</a>.
 * Available for `spree_api` and `spree_frontend`.
 * Allow returning customers to <a href="https://www.mollie.com/en/features/checkout" title="One-click payments">use their previous payment details</a> and pay instantly.
 

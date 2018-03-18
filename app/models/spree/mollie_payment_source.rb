@@ -7,6 +7,10 @@ module Spree
       []
     end
 
+    def transaction_id
+      payment_id
+    end
+
     def method_type
       'mollie_payment_source'
     end
