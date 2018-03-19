@@ -86,6 +86,11 @@ module Spree
           api_key: get_preference(:api_key),
       }
 
+      source.issuer.present?
+      order_params.merge! ({
+        issuer: source.issuer
+      })
+
       if customer_id.present?
         if source.payment_method_name.match(Regexp.union([::Mollie::Method::BITCOIN, ::Mollie::Method::BANKTRANSFER, ::Mollie::Method::GIFTCARD]))
           order_params.merge! ({
