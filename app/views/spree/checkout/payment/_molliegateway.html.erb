@@ -1,15 +1,15 @@
 <ul class="list-group">
   <% payment_method.available_payment_methods.each do |method| %>
     <% prefix = "payment_source[#{payment_method.id}]" %>
-    <div class="radio list-group-item clearfix">
+    <div class="radio list-group-item">
 
-      <label class="pull-left">
+      <label>
         <%= radio_button(prefix, :payment_method_name, method.id, class: 'js-mollie-payment-method') %>
         <%= image_tag(method.image['normal']) %>
         <%= method.description %>
       </label>
 
-      <%= select_tag "#{prefix}[issuer]", options_for_select(method.issuers.collect {|p| [p['name'], p['id']]}), {class: 'form-control js-mollie-issuers', disabled: true, prompt: 'Select an issuer', data: {method: method.id}} if method.issuers.present? %>
+      <%= select_tag "#{prefix}[issuer]", options_for_select(method.issuers.collect {|p| [p['name'], p['id']]}), {class: 'form-control js-mollie-issuers mollie-issuer-list', disabled: true, prompt: 'Select an issuer', data: {method: method.id}} if method.issuers.present? %>
     </div>
   <% end %>
 </ul>
@@ -30,7 +30,20 @@
     for (var i = 0; i < paymentMethodRadioElements.length; i++) {
         paymentMethodRadioElements[i].addEventListener('change', function (e) {
             disableAllIssuerSelectBoxes();
-            document.querySelector('[data-method="' + e.target.value + '"]').removeAttribute('disabled');
+            var issuerSelect = document.querySelector('[data-method="' + e.target.value + '"]');
+            if (issuerSelect) {
+                issuerSelect.removeAttribute('disabled');
+            }
         });
     }
 </script>
+
+<style type="text/css">
+  .mollie-issuer-list {
+    margin-top: 15px;
+  }
+
+  .mollie-issuer-list[disabled] {
+    display: none;
+  }
+</style>
