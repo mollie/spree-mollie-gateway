@@ -13,7 +13,9 @@ module SpreeMollieGateway
 
       ::Rails.application.config.spree.payment_methods << Spree::Gateway::MollieGateway
       Spree::PermittedAttributes.source_attributes << :payment_method_name
+      Spree::PermittedAttributes.source_attributes << :issuer
       Spree::Api::ApiHelpers.payment_source_attributes << :payment_method_name
+      Spree::Api::ApiHelpers.payment_source_attributes << :issuer
       Spree::Api::ApiHelpers.payment_source_attributes << :payment_url
     end
 
