@@ -5,6 +5,11 @@ module Spree
 
     has_many :spree_mollie_payment_sources, class_name: 'Spree::MolliePaymentSource'
 
+    # Only enable one-click payments if spree_auth_devise is installed
+    def self.allow_one_click_payments?
+      Gem.loaded_specs.has_key?('spree_auth_devise')
+    end
+
     def payment_source_class
       Spree::MolliePaymentSource
     end
@@ -98,13 +103,15 @@ module Spree
           })
         end
 
-        mollie_customer_id = Spree::User.find(customer_id).mollie_customer_id
+        if Spree::Gateway::MollieGateway.allow_one_click_payments?
+          mollie_customer_id = Spree.user_class.find(customer_id).try(:mollie_customer_id)
 
-        # Allow one-click payments by passing Mollie customer ID.
-        if mollie_customer_id.present?
-          order_params.merge! ({
-              customerId: customer_id
-          })
+          # Allow one-click payments by passing Mollie customer ID.
+          if mollie_customer_id.present?
+            order_params.merge! ({
+                customerId: customer_id
+            })
+          end
         end
       end
 
@@ -118,7 +125,7 @@ module Spree
 
       begin
         amount = credit_cents / 100.0
-        refund = Mollie::Payment::Refund.create(
+        Mollie::Payment::Refund.create(
             payment_id: payment_id,
             amount: amount,
             description: "Refund Spree Order ID: #{order_number}",
