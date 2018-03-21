@@ -1,6 +1,9 @@
 require 'spec_helper'
 
 RSpec.describe Mollie::Client, :type => :model do
-  it 'is sets the correct API key'
-  it 'set the correct version string'
+  let(:client) { Mollie::Client.new }
+
+  it 'set the correct version string' do
+    expect(client.version_strings.first).to include 'MollieSpreeCommerce'
+  end
 end
