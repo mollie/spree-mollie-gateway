@@ -12,6 +12,8 @@ Gem::Specification.new do |spec|
   spec.description   = %q{Mollie payment gateway for Spree Commerce.}
   spec.homepage      = 'https://www.mollie.com'
 
+  spec.licenses      = ['BSD']
+
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
   if spec.respond_to?(:metadata)
