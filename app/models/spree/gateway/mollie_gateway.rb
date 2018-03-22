@@ -109,7 +109,7 @@ module Spree
           # Allow one-click payments by passing Mollie customer ID.
           if mollie_customer_id.present?
             order_params.merge! ({
-                customerId: customer_id
+                customerId: mollie_customer_id
             })
           end
         end
