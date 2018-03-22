@@ -52,7 +52,7 @@ module Spree
         ActiveMerchant::Billing::Response.new(true, 'Payment created')
       rescue Mollie::Exception => e
         MollieLogger.debug("Could not create payment for order #{gateway_options[:order_id]}: #{e.message}")
-        ActiveMerchant::Billing::Response.new(false, 'Payment could not be created')
+        ActiveMerchant::Billing::Response.new(false, "Payment could not be created: #{e.message}")
       end
     end
 
