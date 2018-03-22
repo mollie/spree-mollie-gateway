@@ -7,7 +7,7 @@ deploy:
   provider: rubygems
   api_key:
     secure: Yz+3DfSfTVK1a7teAc4Dc+n1FwXXEbwbolQA8uxKvBfzQ6qadDUUKkFc0rQgX6g+GIbAtEukwG3OpcY70hmE9SXE5iHlqPZr+4u1ibcHcYrZjcm+ITK7C/xI+CBVFkc90oOVQh/akFLfN6eQOZ0Qb2ugfM1xicKpqtLVhWyVukIZGVqegu2DY1ux3CvxPmrCg2eAsYLZVbTFAAgE3gZ9wnGNWus0FJHveoBg6nFY6hpfZZFA7V1EwfAanczMEvnH8SYn/VJasBqUGLCIQlJN6wH5XjFGTb8fwHNpxtuTS2DzE0Qt+ZY4nYGQjdFON8Jk0d/XS6Dq3uK5wUtpGgpMtSUto0rwBcT9tnZQ+gQaIPYXnGJe80LvdoQswcpnh3w/01hUF2rBNwGJl72t4VtnJt0IriMPlhzoFz9JPDHvPT3KKQLIN4mj+Rpm7p58X4iNgzDs6AHL+xg3OwSP/ywv+1Vd8LQUEBLV8BRVAU5K2+nJI/TK+yyuofSSO7ssKATF3cAaR8DH3Z6wy4iOfyrfVE8g661PDUKvQS3LFJ4LUFcHdA+ndnQL7WqCXqtj4pJhT8+pLLLvjSWDuwWAS62xzP3yHxazBns9KsDbaL4ciqSFUBq0ixtt9F1z3qkX4QLEYTBksrLatAUbcqCpc+qAqCXFPaSpnFd/d/GVEBh4VSk=
-  gem: spree-mollie-gateway
+  gem: spree_mollie_gateway
   on:
     tags: true
     repo: mollie/spree-mollie-gateway
