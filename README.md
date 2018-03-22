@@ -1,4 +1,6 @@
 [<img src="https://www.mollie.com/assets/images/mollie/logo-black.svg" width="110">](https://www.mollie.com/)
+
+[![Build Status](https://travis-ci.com/mollie/spree-mollie-gateway.svg?token=vSsWARRCtaEKat97szyu&branch=master)](https://travis-ci.com/mollie/spree-mollie-gateway) 
   
 This is the official Mollie payment gateway for Spree Commerce. Implement this to easily accept all major payment methods, including iDEAL, Bancontact, Visa, Mastercard, AmEx, and many more, in your Spree Commerce storefront.
  

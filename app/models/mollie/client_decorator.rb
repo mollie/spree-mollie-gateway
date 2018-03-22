@@ -1,4 +1,6 @@
 Mollie::Client.class_eval do
+  attr_accessor :version_strings
+
   def initialize(api_key = nil)
     @api_endpoint = Mollie::Client::API_ENDPOINT
     @api_key = api_key
