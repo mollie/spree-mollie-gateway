@@ -148,14 +148,18 @@ module Spree
 
     def update_payment_status(payment)
       mollie_transaction_id = payment.source.payment_id
-      transaction = ::Mollie::Payment.get(
+      mollie_payment = ::Mollie::Payment.get(
           mollie_transaction_id,
           api_key: get_preference(:api_key)
       )
 
-      MollieLogger.debug("Updating order state for payment. Payment has state #{transaction.status}")
+      MollieLogger.debug("Updating order state for payment. Payment has state #{mollie_payment.status}")
 
-      case transaction.status
+      update_by_mollie_status!(mollie_payment, payment)
+    end
+
+    def update_by_mollie_status!(mollie_payment, payment)
+      case mollie_payment.status
         when 'paid'
           payment.complete! unless payment.completed?
           payment.order.finalize!
