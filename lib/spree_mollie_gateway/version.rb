@@ -1,3 +1,3 @@
 module SpreeMollieGateway
-  VERSION = '0.1.1'
+  VERSION = '1.0.0-beta2'
 end
