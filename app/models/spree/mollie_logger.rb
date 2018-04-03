@@ -5,5 +5,9 @@ module Spree
       @logger ||= Logger.new(File.join(Rails.root, 'log', 'mollie.log'))
       @logger.debug(message)
     end
+
+    def self.logger=(logger)
+      @logger = logger
+    end
   end
 end
