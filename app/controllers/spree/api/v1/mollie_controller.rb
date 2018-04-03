@@ -6,8 +6,6 @@ module Spree
           mollie = Spree::PaymentMethod.find_by_type 'Spree::Gateway::MollieGateway'
           payment_methods = mollie.available_payment_methods
 
-          puts payment_methods
-
           render json: payment_methods
         end
       end
