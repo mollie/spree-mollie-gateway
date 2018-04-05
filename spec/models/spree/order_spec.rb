@@ -41,7 +41,7 @@ RSpec.describe Spree::Order, type: :model do
       expect(order.checkout_steps).to include 'payment'
     end
 
-    context 'with braintree dropin payment' do
+    context 'with payment' do
       before {add_payment_to_order!}
 
       it 'should include payment step' do

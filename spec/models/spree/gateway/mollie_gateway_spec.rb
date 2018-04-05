@@ -52,5 +52,15 @@ RSpec.describe Spree::Gateway::MollieGateway, type: :model do
       gateway.update_by_mollie_status!(mollie_api_payment, payment)
       expect(payment.state).to eq 'void'
     end
+
+    context 'payment method' do
+      it 'should have a list of payment methods' do
+        expect(gateway.available_payment_methods.first).to be_an_instance_of(Mollie::Method)
+      end
+
+      it 'should have nested issuers on payment methods' do
+        expect(gateway.available_payment_methods.first.issuers.first).to include('id' => 'ideal_TESTNL99', 'method' => 'ideal')
+      end
+    end
   end
 end

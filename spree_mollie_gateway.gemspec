@@ -50,5 +50,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'coffee-rails'
   spec.add_development_dependency 'database_cleaner'
 
-  spec.add_runtime_dependency 'mollie-api-ruby', '~> 3.1', '>= 3.1.3'
+  spec.add_runtime_dependency 'mollie-api-ruby', '~> 3.1', '>= 3.1.4.pre.beta'
 end
