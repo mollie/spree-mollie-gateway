@@ -12,3 +12,4 @@
 .idea/
 *.gem
 spec/dummy
+.bundle/
