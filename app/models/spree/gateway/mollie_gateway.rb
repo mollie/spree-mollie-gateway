@@ -75,7 +75,7 @@ module Spree
 
       order_params = {
           amount: amount,
-          description: "Spree Order ID: #{order_number}",
+          description: "Spree Order: #{order_number}",
           redirectUrl: spree_routes.mollie_validate_payment_mollie_url(
               order_number: order_number,
               host: get_preference(:hostname)
