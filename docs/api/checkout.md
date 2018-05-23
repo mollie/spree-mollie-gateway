@@ -121,7 +121,7 @@ curl -X "PUT" "http://localhost:3000/api/v1/checkouts/R805041440/next" \
 
 This will result in the following example response:
 
-```json
+```
 {
     [...]
     number: R805041440,
@@ -164,7 +164,7 @@ curl -X "PUT" "http://localhost:3000/api/v1/checkouts/R287180370" \
 
 Spree will respond with the following example response:
 
-```json
+```
 {
     [...]
     state: 'complete',
