@@ -59,7 +59,7 @@ RSpec.describe Spree::Gateway::MollieGateway, type: :model do
       end
 
       it 'should have nested issuers on payment methods' do
-        expect(gateway.available_payment_methods.first.issuers.first).to include('id' => 'ideal_TESTNL99', 'method' => 'ideal')
+        expect(gateway.available_payment_methods.first.issuers.first).to include('id' => 'ideal_ABNANL2A', 'method' => 'ideal')
       end
     end
   end
