@@ -55,7 +55,7 @@ Spree has several checkout states, the default ones are:
 4. `payment`
 5. `complete`
 
-We're only covering the `payment` and `complete` steps. Documentation on the other checkout steps can be found in the Spree API documentation.
+We're only covering the `payment` and `complete` steps. Documentation on the other checkout steps can be found [in the Spree API documentation](https://guides.spreecommerce.org/api/checkouts.html#address).
 
 ### Listing available payment methods
 
@@ -115,7 +115,7 @@ This will return the following response:
 When you're about to advance your order to the `payment` state, you can do so by calling:
 
 ```bash
-curl -X "PUT" "http://localhost:3000/api/v1/checkouts/R805041440/next" \
+curl -X "PUT" "http://localhost:3000/api/v1/checkouts/<order_id>/next" \
      -H 'X-Spree-Token: <token>'
 ```
 
@@ -144,7 +144,7 @@ In the example response above, the `payments ` array is empty, which means there
 We can use the ID that Spree just returned for this, in combination with the `id` of the preferred Mollie payment method (which we retrieved earlier).
 
 ```bash
-curl -X "PUT" "http://localhost:3000/api/v1/checkouts/R287180370" \
+curl -X "PUT" "http://localhost:3000/api/v1/checkouts/<order_id>" \
      -H 'X-Spree-Token: <token>' \
      -d $'{
   "order": {
@@ -199,7 +199,7 @@ The order has now been transitioned to the state `complete`, but the order has n
 
 In our `source` node, we get a `payment_url`. You should now redirect your users to this URL, so they can complete their payment.
 
-If everything goes well, our order's `payment_state` will transition from `balance_due` to `paid`.
+If everything goes well, our order's `payment_state` will transition from `balance_due` to `paid`. The order confirmation mail will now be send to the user.
 
 Did the payment fail? Make sure to create a new payment and redirect the user to the new `payment_url`.
 
@@ -217,4 +217,4 @@ Each Mollie payment state will transition the order to the following order state
 
 ## Debugging the checkout flow
 
-Each action within the Mollie gateway is logged in a separate log file. Find out more about Debugging.
+Each action within the Mollie gateway is logged in a separate log file. [Learn more about Debugging](https://github.com/mollie/spree-mollie-gateway/blob/master/docs/debugging.md).
