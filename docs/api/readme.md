@@ -4,4 +4,5 @@ This gateway seamlessly integrates with the <a href="https://guides.spreecommerc
 
 ## Endpoints
 
+- <a href="checkout.md">Integrating with the Spree API</a>
 - <a href="methods.md">Get Mollie payment methods</a>
