@@ -72,9 +72,13 @@ module Spree
       order_number = gateway_options[:order_id]
       customer_id = gateway_options[:customer_id]
       amount = money_in_cents / 100.0
+      currency = gateway_options[:currency]
 
       order_params = {
-          amount: amount,
+          amount: {
+              value: amount.to_s,
+              currency: currency
+          },
           description: "Spree Order: #{order_number}",
           redirectUrl: spree_routes.mollie_validate_payment_mollie_url(
               order_number: order_number,

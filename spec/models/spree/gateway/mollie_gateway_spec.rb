@@ -62,5 +62,9 @@ RSpec.describe Spree::Gateway::MollieGateway, type: :model do
         expect(gateway.available_payment_methods.first.issuers.first).to include('id' => 'ideal_ABNANL2A', 'method' => 'ideal')
       end
     end
+
+    context 'multi-currency' do
+      it 'should '
+    end
   end
 end
