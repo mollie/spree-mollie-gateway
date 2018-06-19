@@ -47,7 +47,7 @@ module Spree
 
         source.status = mollie_payment.status
         source.payment_id = mollie_payment.id
-        source.payment_url = mollie_payment.payment_url
+        source.payment_url = mollie_payment.checkout_url
         source.save!
         ActiveMerchant::Billing::Response.new(true, 'Payment created')
       rescue Mollie::Exception => e
