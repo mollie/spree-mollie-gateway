@@ -1,5 +1,12 @@
 Spree::Payment.class_eval do
-  delegate :transaction_id, to: :source
+
+  def transaction_id
+    if payment_method.is_a? Spree::Gateway::MollieGateway
+      source.transaction_id
+    else
+      response_code
+    end
+  end
 
   def build_source
     return unless new_record?
