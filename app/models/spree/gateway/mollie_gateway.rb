@@ -95,10 +95,11 @@ module Spree
           api_key: get_preference(:api_key),
       }
 
-      source.issuer.present?
-      order_params.merge! ({
-        issuer: source.issuer
-      })
+      if source.issuer.present?
+        order_params.merge! ({
+            issuer: source.issuer
+        })
+      end
 
       if customer_id.present?
         if source.payment_method_name.match(Regexp.union([::Mollie::Method::BITCOIN, ::Mollie::Method::BANKTRANSFER, ::Mollie::Method::GIFTCARD]))
@@ -134,8 +135,8 @@ module Spree
         Mollie::Payment::Refund.create(
             payment_id: payment_id,
             amount: {
-              value: sprintf("%.2f", amount.to_f),
-              currency: order_currency
+                value: sprintf("%.2f", amount.to_f),
+                currency: order_currency
             },
             description: "Refund Spree Order ID: #{order_number}",
             api_key: get_preference(:api_key)
@@ -148,22 +149,27 @@ module Spree
       end
     end
 
-    def available_methods
-      ::Mollie::Method.all(
+    def available_methods(params)
+      method_params = {
           api_key: get_preference(:api_key),
-          include: 'issuers'
-      )
+          include: 'issuers',
+      }
+
+      if params.present?
+        method_params.merge! params
+      end
+
+      ::Mollie::Method.all(method_params)
     end
 
     def available_methods_for_order(order)
-       ::Mollie::Method.all(
-          api_key: get_preference(:api_key),
-          include: 'issuers',
+      params = {
           amount: {
-            currency: order.currency,
-            value: sprintf("%.2f", order.amount.to_f)
+              currency: order.currency,
+              value: sprintf("%.2f", order.amount.to_f)
           }
-      )
+      }
+      available_methods(params)
     end
 
     def update_payment_status(payment)
