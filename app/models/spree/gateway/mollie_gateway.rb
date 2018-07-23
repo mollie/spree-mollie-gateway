@@ -124,14 +124,19 @@ module Spree
 
     # Create a new Mollie refund
     def credit(credit_cents, payment_id, options)
-      order_number = options[:originator].try(:payment).try(:order).try(:number)
+      order = options[:originator].try(:payment).try(:order)
+      order_number = order.try(:number)
+      order_currency = order.try(:currency)
       MollieLogger.debug("Starting refund for order #{order_number}")
 
       begin
         amount = credit_cents / 100.0
         Mollie::Payment::Refund.create(
             payment_id: payment_id,
-            amount: amount,
+            amount: {
+              value: sprintf("%.2f", amount.to_f),
+              currency: order_currency
+            },
             description: "Refund Spree Order ID: #{order_number}",
             api_key: get_preference(:api_key)
         )
