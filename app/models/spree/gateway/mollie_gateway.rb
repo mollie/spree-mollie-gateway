@@ -149,7 +149,7 @@ module Spree
       end
     end
 
-    def available_methods(params)
+    def available_methods(params = nil)
       method_params = {
           api_key: get_preference(:api_key),
           include: 'issuers',
