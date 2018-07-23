@@ -21,7 +21,7 @@ module Spree
           'iDEAL'
         when ::Mollie::Method::CREDITCARD then
           'Credit card'
-        when ::Mollie::Method::MISTERCASH then
+        when ::Mollie::Method::BANCONTACT then
           'Bancontact'
         when ::Mollie::Method::SOFORT then
           'SOFORT Banking'
@@ -37,12 +37,16 @@ module Spree
           'Belfius Pay Button'
         when ::Mollie::Method::PAYSAFECARD then
           'paysafecard'
-        when ::Mollie::Method::PODIUMCADEAUKAART then
-          'Podium Cadeaukaart'
         when ::Mollie::Method::GIFTCARD then
           'Giftcard'
         when ::Mollie::Method::INGHOMEPAY then
           'ING Home\'Pay'
+        when ::Mollie::Method::EPS then
+          'EPS'
+        when ::Mollie::Method::GIROPAY then
+          'Giropay'
+        when ::Mollie::Method::DIRECTDEBIT then
+          'SEPA Direct debit'
         else
           'Mollie'
       end

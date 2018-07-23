@@ -76,7 +76,7 @@ module Spree
 
       order_params = {
           amount: {
-              value: amount.to_s,
+              value: sprintf("%.2f", amount.to_f),
               currency: currency
           },
           description: "Spree Order: #{order_number}",
@@ -143,10 +143,21 @@ module Spree
       end
     end
 
-    def available_payment_methods
+    def available_methods
       ::Mollie::Method.all(
           api_key: get_preference(:api_key),
           include: 'issuers'
+      )
+    end
+
+    def available_methods_for_order(order)
+       ::Mollie::Method.all(
+          api_key: get_preference(:api_key),
+          include: 'issuers',
+          amount: {
+            currency: order.currency,
+            value: sprintf("%.2f", order.amount.to_f)
+          }
       )
     end
 
@@ -168,7 +179,7 @@ module Spree
           payment.complete! unless payment.completed?
           payment.order.finalize!
           payment.order.update_attributes(:state => 'complete', :completed_at => Time.now)
-        when 'cancelled', 'expired', 'failed'
+        when 'canceled', 'expired', 'failed'
           payment.failure! unless payment.failed?
         when 'refunded'
           payment.void! unless payment.void?
