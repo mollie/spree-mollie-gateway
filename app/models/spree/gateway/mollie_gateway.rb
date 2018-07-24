@@ -36,12 +36,12 @@ module Spree
     end
 
     # Create a new Mollie payment.
-    def create_transaction(money_in_cents, source, gateway_options)
+    def create_transaction(money, source, gateway_options)
       MollieLogger.debug("About to create payment for order #{gateway_options[:order_id]}")
 
       begin
         mollie_payment = ::Mollie::Payment.create(
-            prepare_payment_params(money_in_cents, source, gateway_options)
+            prepare_payment_params(money, source, gateway_options)
         )
         MollieLogger.debug("Payment #{mollie_payment.id} created for order #{gateway_options[:order_id]}")
 
@@ -67,16 +67,15 @@ module Spree
       customer
     end
 
-    def prepare_payment_params(money_in_cents, source, gateway_options)
+    def prepare_payment_params(money, source, gateway_options)
       spree_routes = ::Spree::Core::Engine.routes.url_helpers
       order_number = gateway_options[:order_id]
       customer_id = gateway_options[:customer_id]
-      amount = money_in_cents / 100.0
       currency = gateway_options[:currency]
 
       order_params = {
           amount: {
-              value: sprintf("%.2f", amount.to_f),
+              value: money.to_s,
               currency: currency
           },
           description: "Spree Order: #{order_number}",
@@ -131,17 +130,16 @@ module Spree
       MollieLogger.debug("Starting refund for order #{order_number}")
 
       begin
-        amount = credit_cents / 100.0
         Mollie::Payment::Refund.create(
             payment_id: payment_id,
             amount: {
-                value: sprintf("%.2f", amount.to_f),
+                value: order.display_total.money.to_s,
                 currency: order_currency
             },
             description: "Refund Spree Order ID: #{order_number}",
             api_key: get_preference(:api_key)
         )
-        MollieLogger.debug("Successfully refunded #{amount} for order #{order_number}")
+        MollieLogger.debug("Successfully refunded #{order.display_total} for order #{order_number}")
         ActiveMerchant::Billing::Response.new(true, 'Refund successful')
       rescue Mollie::Exception => e
         MollieLogger.debug("Refund failed for order #{order_number}: #{e.message}")
@@ -166,7 +164,7 @@ module Spree
       params = {
           amount: {
               currency: order.currency,
-              value: sprintf("%.2f", order.amount.to_f)
+              value: order.display_total.money.to_s
           }
       }
       available_methods(params)
@@ -192,8 +190,6 @@ module Spree
           payment.order.update_attributes(:state => 'complete', :completed_at => Time.now)
         when 'canceled', 'expired', 'failed'
           payment.failure! unless payment.failed?
-        when 'refunded'
-          payment.void! unless payment.void?
         else
           MollieLogger.debug('Unhandled Mollie payment state received. Therefore we did not update the payment state.')
       end
