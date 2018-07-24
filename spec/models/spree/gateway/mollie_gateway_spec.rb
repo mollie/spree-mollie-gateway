@@ -47,12 +47,6 @@ RSpec.describe Spree::Gateway::MollieGateway, type: :model do
       expect(payment.state).to eq 'failed'
     end
 
-    it 'should set payment state to void for refunded Mollie payment' do
-      mollie_api_payment.status = 'refunded'
-      gateway.update_by_mollie_status!(mollie_api_payment, payment)
-      expect(payment.state).to eq 'void'
-    end
-
     context 'payment method' do
       it 'should have a list of payment methods' do
         expect(gateway.available_methods.first).to be_an_instance_of(Mollie::Method)
