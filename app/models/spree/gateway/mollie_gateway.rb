@@ -87,24 +87,31 @@ module Spree
               order_number: order_number,
               host: get_preference(:hostname)
           ),
-          method: source.payment_method_name,
           metadata: {
               order_id: order_number
           },
           api_key: get_preference(:api_key),
       }
 
-      if source.issuer.present?
+      if source.try(:payment_method_name).present?
+        order_params.merge! ({
+            method: source.payment_method_name,
+        })
+      end
+
+      if source.try(:issuer).present?
         order_params.merge! ({
             issuer: source.issuer
         })
       end
 
       if customer_id.present?
-        if source.payment_method_name.match(Regexp.union([::Mollie::Method::BITCOIN, ::Mollie::Method::BANKTRANSFER, ::Mollie::Method::GIFTCARD]))
-          order_params.merge! ({
-              billingEmail: gateway_options[:email]
-          })
+        if source.try(:payment_method_name).present?
+          if source.payment_method_name.match(Regexp.union([::Mollie::Method::BITCOIN, ::Mollie::Method::BANKTRANSFER, ::Mollie::Method::GIFTCARD]))
+            order_params.merge! ({
+                billingEmail: gateway_options[:email]
+            })
+          end
         end
 
         if Spree::Gateway::MollieGateway.allow_one_click_payments?
