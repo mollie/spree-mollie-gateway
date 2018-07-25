@@ -18,7 +18,7 @@ Spree::Payment::Processing.module_eval do
   end
 
   def process_with_mollie
-    amount ||= money.money.cents
+    amount ||= money.money
     started_processing!
     response = payment_method.create_transaction(
         amount,

@@ -30,7 +30,7 @@ RSpec.describe Spree::Gateway::MollieGateway, type: :model do
     end
 
     it 'should set payment state to failed for cancelled Mollie payment' do
-      mollie_api_payment.status = 'cancelled'
+      mollie_api_payment.status = 'canceled'
       gateway.update_by_mollie_status!(mollie_api_payment, payment)
       expect(payment.state).to eq 'failed'
     end
@@ -47,19 +47,13 @@ RSpec.describe Spree::Gateway::MollieGateway, type: :model do
       expect(payment.state).to eq 'failed'
     end
 
-    it 'should set payment state to void for refunded Mollie payment' do
-      mollie_api_payment.status = 'refunded'
-      gateway.update_by_mollie_status!(mollie_api_payment, payment)
-      expect(payment.state).to eq 'void'
-    end
-
     context 'payment method' do
       it 'should have a list of payment methods' do
-        expect(gateway.available_payment_methods.first).to be_an_instance_of(Mollie::Method)
+        expect(gateway.available_methods.first).to be_an_instance_of(Mollie::Method)
       end
 
       it 'should have nested issuers on payment methods' do
-        expect(gateway.available_payment_methods.first.issuers.first).to include('id' => 'ideal_ABNANL2A', 'method' => 'ideal')
+        expect(gateway.available_methods.first.issuers.first).to include('name' => 'ABN AMRO', 'image' => {'size1x' => 'https://www.mollie.com/images/checkout/v2/ideal-issuer-icons/ABNANL2A.png', 'size2x' => 'https://www.mollie.com/images/checkout/v2/ideal-issuer-icons/ABNANL2A.png'}, 'resource' => 'issuer')
       end
     end
   end
