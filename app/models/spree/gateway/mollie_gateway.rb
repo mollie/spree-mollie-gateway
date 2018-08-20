@@ -35,6 +35,19 @@ module Spree
       true
     end
 
+    def gateways(options = {})
+      payment_method = Spree::PaymentMethod.find_by_type self.class
+      if options[:order].present? && options[:order].is_a?(Spree::Order)
+        payment_method.available_methods_for_order(options[:order])
+      elsif options[:amount].present?
+        payment_method.available_methods(options)
+      else
+        raise 'Unprocessable input'
+      end.map do |method|
+        method.attributes
+      end
+    end
+
     # Create a new Mollie payment.
     def create_transaction(money, source, gateway_options)
       MollieLogger.debug("About to create payment for order #{gateway_options[:order_id]}")
@@ -62,7 +75,7 @@ module Spree
       customer = Mollie::Customer.create(
           email: user.email,
           api_key: get_preference(:api_key),
-          )
+      )
       MollieLogger.debug("Created a Mollie Customer for Spree user with ID #{customer.id}")
       customer
     end
@@ -191,14 +204,14 @@ module Spree
 
     def update_by_mollie_status!(mollie_payment, payment)
       case mollie_payment.status
-        when 'paid'
-          payment.complete! unless payment.completed?
-          payment.order.finalize!
-          payment.order.update_attributes(:state => 'complete', :completed_at => Time.now)
-        when 'canceled', 'expired', 'failed'
-          payment.failure! unless payment.failed?
-        else
-          MollieLogger.debug('Unhandled Mollie payment state received. Therefore we did not update the payment state.')
+      when 'paid'
+        payment.complete! unless payment.completed?
+        payment.order.finalize!
+        payment.order.update_attributes(:state => 'complete', :completed_at => Time.now)
+      when 'canceled', 'expired', 'failed'
+        payment.failure! unless payment.failed?
+      else
+        MollieLogger.debug('Unhandled Mollie payment state received. Therefore we did not update the payment state.')
       end
 
       payment.source.update(status: payment.state)
