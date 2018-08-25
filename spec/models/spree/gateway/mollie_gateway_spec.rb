@@ -53,7 +53,7 @@ RSpec.describe Spree::Gateway::MollieGateway, type: :model do
       end
 
       it 'should have nested issuers on payment methods' do
-        expect(gateway.available_methods.first.issuers.first).to include('name' => 'ABN AMRO', 'image' => {'size1x' => 'https://www.mollie.com/images/checkout/v2/ideal-issuer-icons/ABNANL2A.png', 'size2x' => 'https://www.mollie.com/images/checkout/v2/ideal-issuer-icons/ABNANL2A.png'}, 'resource' => 'issuer')
+        expect(gateway.available_methods.first.issuers.first).to include('name' => 'ABN AMRO', 'image' => {'size1x' => 'https://www.mollie.com/external/icons/ideal-issuers/ABNANL2A.png', 'size2x' => 'https://www.mollie.com/external/icons/ideal-issuers/ABNANL2A%402x.png', 'svg' => 'https://www.mollie.com/external/icons/ideal-issuers/ABNANL2A.svg'}, 'resource' => 'issuer')
       end
     end
   end
