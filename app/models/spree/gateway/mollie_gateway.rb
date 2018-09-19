@@ -88,7 +88,7 @@ module Spree
 
       order_params = {
           amount: {
-              value: money.to_s,
+              value: format_money(money),
               currency: currency
           },
           description: "Spree Order: #{order_number}",
@@ -153,7 +153,7 @@ module Spree
         Mollie::Payment::Refund.create(
             payment_id: payment_id,
             amount: {
-                value: order.display_total.money.to_s,
+                value: format_money(order.display_total.money),
                 currency: order_currency
             },
             description: "Refund Spree Order ID: #{order_number}",
@@ -180,11 +180,15 @@ module Spree
       ::Mollie::Method.all(method_params)
     end
 
+    def format_money(money)
+      money.format(symbol: nil, thousands_separator: nil, decimal_mark: '.')
+    end
+
     def available_methods_for_order(order)
       params = {
           amount: {
               currency: order.currency,
-              value: order.display_total.money.to_s
+              value: format_money(order.display_total.money)
           }
       }
       available_methods(params)
