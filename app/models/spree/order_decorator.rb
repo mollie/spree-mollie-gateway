@@ -8,7 +8,7 @@ Spree::Order.class_eval do
     updater.update_payment_state
     shipments.each do |shipment|
       shipment.update!(self)
-      shipment.finalize!
+      shipment.finalize! if paid?
     end
 
     updater.update_shipment_state
