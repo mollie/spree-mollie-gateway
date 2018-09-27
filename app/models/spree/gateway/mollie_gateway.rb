@@ -214,6 +214,7 @@ module Spree
         payment.order.update_attributes(:state => 'complete', :completed_at => Time.now)
       when 'canceled', 'expired', 'failed'
         payment.failure! unless payment.failed?
+        payment.order.update_attributes(:state => 'payment', :completed_at => nil)
       else
         MollieLogger.debug('Unhandled Mollie payment state received. Therefore we did not update the payment state.')
       end
