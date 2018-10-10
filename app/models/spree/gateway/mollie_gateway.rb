@@ -75,7 +75,7 @@ module Spree
       customer = Mollie::Customer.create(
           email: user.email,
           api_key: get_preference(:api_key),
-      )
+          )
       MollieLogger.debug("Created a Mollie Customer for Spree user with ID #{customer.id}")
       customer
     end
@@ -167,6 +167,20 @@ module Spree
       end
     end
 
+    def cancel(transaction_id)
+      begin
+        mollie_payment = ::Mollie::Payment.get(
+            transaction_id,
+            api_key: get_preference(:api_key)
+        )
+        mollie_payment.delete(transaction_id) if mollie_payment.is_cancelable
+        ActiveMerchant::Billing::Response.new(true, 'Payment cancelled successful')
+      rescue Mollie::Exception => e
+        MollieLogger.debug("Refund failed for order #{order_number}: #{e.message}")
+        ActiveMerchant::Billing::Response.new(false, 'Payment cancelation unsuccessful')
+      end
+    end
+
     def available_methods(params = nil)
       method_params = {
           api_key: get_preference(:api_key),
@@ -208,16 +222,16 @@ module Spree
 
     def update_by_mollie_status!(mollie_payment, payment)
       case mollie_payment.status
-      when 'paid'
-        payment.complete! unless payment.completed?
-        payment.order.finalize!
-        payment.order.update_attributes(:state => 'complete', :completed_at => Time.now)
-      when 'canceled', 'expired', 'failed'
-        payment.failure! unless payment.failed?
-        payment.order.update_attributes(:state => 'payment', :completed_at => nil)
-      else
-        MollieLogger.debug('Unhandled Mollie payment state received. Therefore we did not update the payment state.')
-        payment.order.update_attributes(state: 'payment', completed_at: nil)
+        when 'paid'
+          payment.complete! unless payment.completed?
+          payment.order.finalize!
+          payment.order.update_attributes(:state => 'complete', :completed_at => Time.now)
+        when 'canceled', 'expired', 'failed'
+          payment.failure! unless payment.failed?
+          payment.order.update_attributes(:state => 'payment', :completed_at => nil)
+        else
+          MollieLogger.debug('Unhandled Mollie payment state received. Therefore we did not update the payment state.')
+          payment.order.update_attributes(state: 'payment', completed_at: nil)
       end
 
       payment.source.update(status: payment.state)
