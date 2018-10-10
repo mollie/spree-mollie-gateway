@@ -174,9 +174,9 @@ module Spree
             api_key: get_preference(:api_key)
         )
         mollie_payment.delete(transaction_id) if mollie_payment.is_cancelable
-        ActiveMerchant::Billing::Response.new(true, 'Payment cancelled successful')
+        ActiveMerchant::Billing::Response.new(true, 'Payment canceled successful')
       rescue Mollie::Exception => e
-        MollieLogger.debug("Refund failed for order #{order_number}: #{e.message}")
+        MollieLogger.debug("Payment could not be canceled #{transaction_id}: #{e.message}")
         ActiveMerchant::Billing::Response.new(false, 'Payment cancelation unsuccessful')
       end
     end
