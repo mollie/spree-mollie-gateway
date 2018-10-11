@@ -35,7 +35,7 @@ RSpec.describe Spree::Gateway::MollieGateway, type: :model do
       expect(payment.state).to eq 'failed'
     end
 
-    it 'should set orde state to payment for cancelled Mollie payment' do
+    it 'should set order state to payment for cancelled Mollie payment' do
       mollie_api_payment.status = 'canceled'
       gateway.update_by_mollie_status!(mollie_api_payment, payment)
       expect(order.state).to eq 'payment'
