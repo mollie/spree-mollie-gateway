@@ -177,7 +177,7 @@ module Spree
         ActiveMerchant::Billing::Response.new(true, 'Payment canceled successful')
       rescue Mollie::Exception => e
         MollieLogger.debug("Payment could not be canceled #{transaction_id}: #{e.message}")
-        ActiveMerchant::Billing::Response.new(false, 'Payment cancelation unsuccessful')
+        ActiveMerchant::Billing::Response.new(false, 'Payment cancellation unsuccessful')
       end
     end
 
