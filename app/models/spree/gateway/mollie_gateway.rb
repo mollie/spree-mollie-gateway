@@ -237,15 +237,14 @@ module Spree
 
         if payment.completed?
           MollieLogger.debug('Payment is already completed. Not updating the payment status within Spree.')
+          return
         end
 
         # If order is already paid for, don't mark it as complete again.
-        unless payment.completed?
-          payment.complete!
-          payment.order.finalize!
-          payment.order.update_attributes(:state => 'complete', :completed_at => Time.now)
-          MollieLogger.debug('Payment is paid and will transition to completed. Order will be finalized.')
-        end
+        payment.complete!
+        payment.order.finalize!
+        payment.order.update_attributes(:state => 'complete', :completed_at => Time.now)
+        MollieLogger.debug('Payment is paid and will transition to completed. Order will be finalized.')
       when 'canceled', 'expired', 'failed'
         payment.failure! unless payment.failed?
         payment.order.update_attributes(:state => 'payment', :completed_at => nil)
