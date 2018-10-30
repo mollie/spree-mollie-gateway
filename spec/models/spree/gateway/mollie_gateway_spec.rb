@@ -18,12 +18,20 @@ RSpec.describe Spree::Gateway::MollieGateway, type: :model do
     context 'with paid Mollie payment' do
       it 'should set payment state to paid for paid Mollie payment' do
         mollie_api_payment.status = 'paid'
+        mollie_api_payment.amount_refunded = {
+            currency: 'EUR',
+            value: '0.00'
+        }
         gateway.update_by_mollie_status!(mollie_api_payment, payment)
         expect(payment.state).to eq 'completed'
       end
 
       it 'should set order state to complete for paid Mollie payment' do
         mollie_api_payment.status = 'paid'
+        mollie_api_payment.amount_refunded = {
+            currency: 'EUR',
+            value: '0.00'
+        }
         gateway.update_by_mollie_status!(mollie_api_payment, payment)
         expect(payment.order.state).to eq 'complete'
       end
@@ -68,6 +76,23 @@ RSpec.describe Spree::Gateway::MollieGateway, type: :model do
         mollie_api_payment.status = 'failed'
         gateway.update_by_mollie_status!(mollie_api_payment, payment)
         expect(order.state).to eq 'payment'
+      end
+    end
+
+    context 'with refunded Mollie payment' do
+      it 'should not update payment state' do
+        payment.state = 'paid'
+        order.state = 'complete'
+        order.completed_at = '2018-10-22 08:42:30'
+        mollie_api_payment.status = 'paid'
+        mollie_api_payment.amount_refunded = {
+            currency: 'EUR',
+            value: '15.00'
+        }
+        gateway.update_by_mollie_status!(mollie_api_payment, payment)
+        expect(payment.state).to eq 'paid'
+        expect(order.state).to eq 'complete'
+        expect(order.completed_at).to eq '2018-10-22 08:42:30'
       end
     end
 

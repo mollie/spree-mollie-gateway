@@ -4,7 +4,7 @@ FactoryBot.define do
 
     before(:create) do |gateway|
       gateway.preferences[:api_key] = ENV['MOLLIE_API_KEY']
-      gateway.preferences[:hostname] = 'https://mollie.test'
+      gateway.preferences[:hostname] = 'https://mollie.com'
     end
   end
 end

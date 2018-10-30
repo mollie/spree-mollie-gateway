@@ -75,7 +75,7 @@ module Spree
       customer = Mollie::Customer.create(
           email: user.email,
           api_key: get_preference(:api_key),
-          )
+      )
       MollieLogger.debug("Created a Mollie Customer for Spree user with ID #{customer.id}")
       customer
     end
@@ -168,15 +168,22 @@ module Spree
     end
 
     def cancel(transaction_id)
+      MollieLogger.debug("Starting cancelation for #{transaction_id}")
+
       begin
         mollie_payment = ::Mollie::Payment.get(
             transaction_id,
             api_key: get_preference(:api_key)
         )
-        mollie_payment.delete(transaction_id) if mollie_payment.cancelable?
-        ActiveMerchant::Billing::Response.new(true, 'Payment canceled successful')
+        if mollie_payment.cancelable?
+          mollie_payment.delete(transaction_id)
+          ActiveMerchant::Billing::Response.new(true, 'Mollie payment has been cancelled')
+        else
+          MollieLogger.debug("Molie payment #{transaction_id} is not cancelable. Skipping any further updates.")
+          ActiveMerchant::Billing::Response.new(true, 'Mollie payment has not been cancelled because it is not cancelable')
+        end
       rescue Mollie::Exception => e
-        MollieLogger.debug("Payment could not be canceled #{transaction_id}: #{e.message}")
+        MollieLogger.debug("Payment #{transaction_id} could not be canceled: #{e.message}")
         ActiveMerchant::Billing::Response.new(false, 'Payment cancellation unsuccessful')
       end
     end
@@ -215,23 +222,35 @@ module Spree
           api_key: get_preference(:api_key)
       )
 
-      MollieLogger.debug("Updating order state for payment. Payment has state #{mollie_payment.status}")
-
+      MollieLogger.debug("Checking Mollie payment status. Mollie payment has status #{mollie_payment.status}")
       update_by_mollie_status!(mollie_payment, payment)
     end
 
     def update_by_mollie_status!(mollie_payment, payment)
       case mollie_payment.status
-        when 'paid'
-          payment.complete! unless payment.completed?
-          payment.order.finalize!
-          payment.order.update_attributes(:state => 'complete', :completed_at => Time.now)
-        when 'canceled', 'expired', 'failed'
-          payment.failure! unless payment.failed?
-          payment.order.update_attributes(:state => 'payment', :completed_at => nil)
-        else
-          MollieLogger.debug('Unhandled Mollie payment state received. Therefore we did not update the payment state.')
-          payment.order.update_attributes(state: 'payment', completed_at: nil)
+      when 'paid'
+        # If Mollie payment is already paid and refunded amount is more than 0, don't update payment
+        if mollie_payment.paid? && mollie_payment.amount_refunded.value > 0
+          MollieLogger.debug('Payment is refunded. Not updating the payment status within Spree.')
+          return
+        end
+
+        if payment.completed?
+          MollieLogger.debug('Payment is already completed. Not updating the payment status within Spree.')
+          return
+        end
+
+        # If order is already paid for, don't mark it as complete again.
+        payment.complete!
+        payment.order.finalize!
+        payment.order.update_attributes(:state => 'complete', :completed_at => Time.now)
+        MollieLogger.debug('Payment is paid and will transition to completed. Order will be finalized.')
+      when 'canceled', 'expired', 'failed'
+        payment.failure! unless payment.failed?
+        payment.order.update_attributes(:state => 'payment', :completed_at => nil)
+      else
+        MollieLogger.debug('Unhandled Mollie payment state received. Therefore we did not update the payment state.')
+        payment.order.update_attributes(state: 'payment', completed_at: nil)
       end
 
       payment.source.update(status: payment.state)
