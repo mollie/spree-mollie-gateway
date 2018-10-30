@@ -34,8 +34,7 @@ Please go to the [signup page](https://www.mollie.com/signup) to create a new Mo
 * Allow returning customers to <a href="https://www.mollie.com/en/features/checkout" title="One-click payments">use their previous payment details</a> and pay instantly.
 
 ## Requirements
-- Spree 3.4.x or newer.
-- Rails 5.1.x or newer.  
+- Spree 3.1.0 or newer.  
 
 ## Installation
 
