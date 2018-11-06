@@ -1,7 +1,7 @@
 <p align="center">
-  <img src="https://info.mollie.com/hubfs/github/nodejs/logo-1.png" width="128" height="128"/>
+  <img src="https://info.mollie.com/hubfs/github/spree/logo.png" width="128" height="128"/>
 </p>
-<h1 align="center">Mollie gateway for Spree Commerce</h1>
+<h1 align="center">Mollie for Spree Commerce</h1>
 
 [![Build Status](https://travis-ci.org/mollie/spree-mollie-gateway.svg?branch=master)](https://travis-ci.org/mollie/spree-mollie-gateway) [![Gem Version](https://badge.fury.io/rb/spree_mollie_gateway.svg)](https://badge.fury.io/rb/spree_mollie_gateway) 
   
