@@ -1,4 +1,4 @@
-class CreateSpreeMolliePaymentSources < ActiveRecord::Migration[5.1]
+class CreateSpreeMolliePaymentSources < SpreeExtension::Migration[4.2]
   def change
     create_table :spree_mollie_payment_sources do |t|
       t.string :payment_id
