@@ -38,7 +38,7 @@ Spree::Payment::Processing.module_eval do
   def process_with_mollie
     amount ||= money.money
     started_processing!
-    response = payment_method.create_transaction(
+    response = payment_method.process_order(
         amount,
         source,
         gateway_options
