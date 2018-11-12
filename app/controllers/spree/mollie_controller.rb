@@ -1,6 +1,6 @@
 module Spree
   class MollieController < BaseController
-    skip_before_action :verify_authenticity_token, :only => [:update_payment_status]
+    skip_before_action :verify_authenticity_token, only: [:update_payment_status]
 
     # When the user is redirected from Mollie back to the shop, we can check the
     # mollie transaction status and set the Spree order state accordingly.

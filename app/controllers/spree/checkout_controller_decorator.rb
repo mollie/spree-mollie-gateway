@@ -22,6 +22,7 @@ module Spree
 
   CheckoutController.class_eval do
     prepend CheckoutWithMollie
+
     private
 
     def payment_method_id_param

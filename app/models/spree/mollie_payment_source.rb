@@ -17,38 +17,38 @@ module Spree
 
     def name
       case payment_method_name
-        when ::Mollie::Method::IDEAL then
-          'iDEAL'
-        when ::Mollie::Method::CREDITCARD then
-          'Credit card'
-        when ::Mollie::Method::BANCONTACT then
-          'Bancontact'
-        when ::Mollie::Method::SOFORT then
-          'SOFORT Banking'
-        when ::Mollie::Method::BANKTRANSFER then
-          'Bank transfer'
-        when ::Mollie::Method::BITCOIN then
-          'Bitcoin'
-        when ::Mollie::Method::PAYPAL then
-          'PayPal'
-        when ::Mollie::Method::KBC then
-          'KBC/CBC Payment Button'
-        when ::Mollie::Method::BELFIUS then
-          'Belfius Pay Button'
-        when ::Mollie::Method::PAYSAFECARD then
-          'paysafecard'
-        when ::Mollie::Method::GIFTCARD then
-          'Giftcard'
-        when ::Mollie::Method::INGHOMEPAY then
-          'ING Home\'Pay'
-        when ::Mollie::Method::EPS then
-          'EPS'
-        when ::Mollie::Method::GIROPAY then
-          'Giropay'
-        when ::Mollie::Method::DIRECTDEBIT then
-          'SEPA Direct debit'
-        else
-          'Mollie'
+      when ::Mollie::Method::IDEAL then
+        'iDEAL'
+      when ::Mollie::Method::CREDITCARD then
+        'Credit card'
+      when ::Mollie::Method::BANCONTACT then
+        'Bancontact'
+      when ::Mollie::Method::SOFORT then
+        'SOFORT Banking'
+      when ::Mollie::Method::BANKTRANSFER then
+        'Bank transfer'
+      when ::Mollie::Method::BITCOIN then
+        'Bitcoin'
+      when ::Mollie::Method::PAYPAL then
+        'PayPal'
+      when ::Mollie::Method::KBC then
+        'KBC/CBC Payment Button'
+      when ::Mollie::Method::BELFIUS then
+        'Belfius Pay Button'
+      when ::Mollie::Method::PAYSAFECARD then
+        'paysafecard'
+      when ::Mollie::Method::GIFTCARD then
+        'Giftcard'
+      when ::Mollie::Method::INGHOMEPAY then
+        'ING Home\'Pay'
+      when ::Mollie::Method::EPS then
+        'EPS'
+      when ::Mollie::Method::GIROPAY then
+        'Giropay'
+      when ::Mollie::Method::DIRECTDEBIT then
+        'SEPA Direct debit'
+      else
+        'Mollie'
       end
     end
 

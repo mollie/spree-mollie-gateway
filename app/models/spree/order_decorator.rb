@@ -17,7 +17,7 @@ Spree::Order.class_eval do
 
     touch :completed_at
 
-    deliver_order_confirmation_email unless confirmation_delivered? or !paid?
+    deliver_order_confirmation_email unless confirmation_delivered? || !paid?
 
     consider_risk
   end
