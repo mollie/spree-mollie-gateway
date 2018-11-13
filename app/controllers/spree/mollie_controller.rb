@@ -19,7 +19,7 @@ module Spree
     # Mollie might send us information about a transaction through the webhook.
     # We should update the payment state accordingly.
     def update_payment_status
-      MollieLogger.debug("Webhook called for payment #{params[:id]}")
+      MollieLogger.debug("Webhook called for Mollie order #{params[:id]}")
 
       payment = Spree::MolliePaymentSource.find_by_payment_id(params[:id]).payments.first
       mollie = Spree::PaymentMethod.find_by_type 'Spree::Gateway::MollieGateway'

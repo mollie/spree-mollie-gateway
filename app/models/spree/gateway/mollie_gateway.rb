@@ -127,7 +127,8 @@ module Spree
     def available_methods(params = nil)
       method_params = {
         api_key: get_preference(:api_key),
-        include: 'issuers'
+        include: 'issuers',
+        resource: 'orders'
       }
 
       method_params.merge! params if params.present?
@@ -139,51 +140,27 @@ module Spree
       params = {
         amount: {
           currency: order.currency,
-          value: format_money(order.display_total.money)
-        }
+          value: format_money(order.display_total.money),
+        },
+        resource: 'orders'
       }
       available_methods(params)
     end
 
-    def update_payment_status(payment)
-      mollie_transaction_id = payment.source.payment_id
-      mollie_payment = ::Mollie::Payment.get(
-        mollie_transaction_id,
+    def update_payment_status(spree_payment)
+      mollie_order_id = spree_payment.source.payment_id
+      mollie_order = ::Mollie::Order.get(
+        mollie_order_id,
+        embed: 'payments',
         api_key: get_preference(:api_key)
       )
 
-      MollieLogger.debug("Checking Mollie payment status. Mollie payment has status #{mollie_payment.status}")
-      update_by_mollie_status!(mollie_payment, payment)
+      MollieLogger.debug("Checking Mollie payment status. Mollie payment has status #{mollie_order.status}")
+      update_by_mollie_status!(mollie_order, spree_payment)
     end
 
-    def update_by_mollie_status!(mollie_payment, payment)
-      case mollie_payment.status
-      when 'paid'
-        # If Mollie payment is already paid and refunded amount is more than 0, don't update payment
-        if mollie_payment.paid? && mollie_payment.amount_refunded.value > 0
-          MollieLogger.debug('Payment is refunded. Not updating the payment status within Spree.')
-          return
-        end
-
-        if payment.completed?
-          MollieLogger.debug('Payment is already completed. Not updating the payment status within Spree.')
-          return
-        end
-
-        # If order is already paid for, don't mark it as complete again.
-        payment.complete!
-        payment.order.finalize!
-        payment.order.update_attributes(state: 'complete', completed_at: Time.now)
-        MollieLogger.debug('Payment is paid and will transition to completed. Order will be finalized.')
-      when 'canceled', 'expired', 'failed'
-        payment.failure! unless payment.failed?
-        payment.order.update_attributes(state: 'payment', completed_at: nil)
-      else
-        MollieLogger.debug('Unhandled Mollie payment state received. Therefore we did not update the payment state.')
-        payment.order.update_attributes(state: 'payment', completed_at: nil)
-      end
-
-      payment.source.update(status: payment.state)
+    def update_by_mollie_status!(mollie_order, spree_payment)
+      Spree::Mollie::PaymentStateUpdater.update(mollie_order, spree_payment)
     end
 
     private
