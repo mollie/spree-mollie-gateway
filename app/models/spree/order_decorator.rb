@@ -8,7 +8,7 @@ Spree::Order.class_eval do
     updater.update_payment_state
     shipments.each do |shipment|
       shipment.update!(self)
-      shipment.finalize! if paid?
+      shipment.finalize! if paid? || authorized?
     end
 
     updater.update_shipment_state
@@ -17,8 +17,18 @@ Spree::Order.class_eval do
 
     touch :completed_at
 
-    deliver_order_confirmation_email unless confirmation_delivered? || !paid?
+    puts "confirmation_delivered: #{confirmation_delivered?}"
+    puts "paid?: #{paid?}"
+    puts "authorized?: #{authorized?}"
+
+    if !confirmation_delivered? && (paid? || authorized?)
+      deliver_order_confirmation_email
+    end
 
     consider_risk
+  end
+
+  def authorized?
+    payments.last.authorized?
   end
 end

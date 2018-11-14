@@ -1,7 +1,7 @@
 module Spree
   module Mollie
     class OrderSerializer
-      include Spree::Mollie::MoneyFormatter
+      include ::Spree::Mollie::MoneyFormatter
 
       def self.serialize(total_amount, source, gateway_options, gateway_preferences)
         new(total_amount, source, gateway_options, gateway_preferences).serialize

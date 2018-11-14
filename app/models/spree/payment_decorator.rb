@@ -20,4 +20,12 @@ Spree::Payment.class_eval do
       process! if order.completed?
     end
   end
+
+  def authorized?
+    if source.is_a? Spree::MolliePaymentSource
+      pending?
+    else
+      false
+    end
+  end
 end
