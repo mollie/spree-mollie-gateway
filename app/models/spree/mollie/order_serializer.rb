@@ -3,8 +3,8 @@ module Spree
     class OrderSerializer
       include Spree::Mollie::MoneyFormatter
 
-      def self.serialize(*args)
-        new(*args).serialize
+      def self.serialize(total_amount, source, gateway_options, gateway_preferences)
+        new(total_amount, source, gateway_options, gateway_preferences).serialize
       end
 
       def initialize(total_amount, source, gateway_options, gateway_preferences)
@@ -19,8 +19,6 @@ module Spree
         spree_routes = ::Spree::Core::Engine.routes.url_helpers
         currency = @gateway_options[:currency]
         order_number = @gateway_options[:order_id]
-        billing_address = serialize_address(@gateway_options[:billing_address])
-        shipping_address = serialize_address(@gateway_options[:billing_address])
 
         order_params = {
             amount: {
@@ -43,15 +41,15 @@ module Spree
             api_key: @gateway_preferences[:api_key]
         }
 
-        if @order.billing_address.present?
+        if @gateway_options[:billing_address].present?
           order_params.merge! ({
-              billingAddress: billing_address
+              billingAddress: serialize_address(@gateway_options[:billing_address])
           })
         end
 
-        if @order.shipping_address.present?
+        if @gateway_options[:shipping_address].present?
           order_params.merge! ({
-              shippingAddress: shipping_address
+              shippingAddress: serialize_address(@gateway_options[:shipping_address])
           })
         end
 
