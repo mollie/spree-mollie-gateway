@@ -16,7 +16,7 @@ module Spree
       order = order.reload
 
       # Order is paid for or authorized (e.g. Klarna Pay Later)
-      redirect_to (order.paid? || payment.pending?) ? order_path(order) : checkout_state_path(:payment)
+      redirect_to order.paid? || payment.pending? ? order_path(order) : checkout_state_path(:payment)
     end
 
     # Mollie might send us information about a transaction through the webhook.

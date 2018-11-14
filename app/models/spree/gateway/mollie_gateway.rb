@@ -71,8 +71,8 @@ module Spree
     # Required for one-click Mollie payments.
     def create_customer(user)
       customer = Mollie::Customer.create(
-          email: user.email,
-          api_key: get_preference(:api_key)
+        email: user.email,
+        api_key: get_preference(:api_key)
       )
       MollieLogger.debug("Created a Mollie Customer for Spree user with ID #{customer.id}")
       customer
@@ -87,13 +87,13 @@ module Spree
 
       begin
         ::Mollie::Payment::Refund.create(
-            payment_id: payment_id,
-            amount: {
-                value: format_money(order.display_total.money),
-                currency: order_currency
-            },
-            description: "Refund Spree Order ID: #{order_number}",
-            api_key: get_preference(:api_key)
+          payment_id: payment_id,
+          amount: {
+            value: format_money(order.display_total.money),
+            currency: order_currency
+          },
+          description: "Refund Spree Order ID: #{order_number}",
+          api_key: get_preference(:api_key)
         )
         MollieLogger.debug("Successfully refunded #{order.display_total} for order #{order_number}")
         ActiveMerchant::Billing::Response.new(true, 'Refund successful')
@@ -108,8 +108,8 @@ module Spree
 
       begin
         mollie_payment = ::Mollie::Payment.get(
-            transaction_id,
-            api_key: get_preference(:api_key)
+          transaction_id,
+          api_key: get_preference(:api_key)
         )
         if mollie_payment.cancelable?
           mollie_payment.delete(transaction_id)
@@ -126,27 +126,27 @@ module Spree
 
     def available_methods(params = nil)
       method_params = {
-          api_key: get_preference(:api_key),
-          include: 'issuers',
-          resource: 'orders'
+        api_key: get_preference(:api_key),
+        include: 'issuers',
+        resource: 'orders'
       }
 
       method_params.merge! params if params.present?
 
       puts method_params.inspect
-      puts "yes"
+      puts 'yes'
 
       ::Mollie::Method.all(method_params)
     end
 
     def available_methods_for_order(order)
       params = {
-          amount: {
-              currency: order.currency,
-              value: format_money(order.display_total.money),
-          },
-          resource: 'orders',
-          billingCountry: order.billing_address.country.try(:iso)
+        amount: {
+          currency: order.currency,
+          value: format_money(order.display_total.money)
+        },
+        resource: 'orders',
+        billingCountry: order.billing_address.country.try(:iso)
       }
       available_methods(params)
     end
@@ -154,9 +154,9 @@ module Spree
     def update_payment_status(spree_payment)
       mollie_order_id = spree_payment.source.payment_id
       mollie_order = ::Mollie::Order.get(
-          mollie_order_id,
-          embed: 'payments',
-          api_key: get_preference(:api_key)
+        mollie_order_id,
+        embed: 'payments',
+        api_key: get_preference(:api_key)
       )
 
       MollieLogger.debug("Checking Mollie payment status. Mollie payment has status #{mollie_order.status}")
@@ -171,8 +171,8 @@ module Spree
 
     def prepare_order_params(money, source, gateway_options)
       gateway_preferences = {
-          hostname: get_preference(:hostname),
-          api_key: get_preference(:api_key)
+        hostname: get_preference(:hostname),
+        api_key: get_preference(:api_key)
       }
       Spree::Mollie::OrderSerializer.serialize(money, source, gateway_options, gateway_preferences)
     end
