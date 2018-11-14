@@ -13,7 +13,10 @@ module Spree
 
       MollieLogger.debug("Redirect URL visited for order #{params[:order_number]}")
 
-      redirect_to order.reload.paid? ? order_path(order) : checkout_state_path(:payment)
+      order = order.reload
+
+      # Order is paid for or authorized (e.g. Klarna Pay Later)
+      redirect_to (order.paid? || payment.pending?) ? order_path(order) : checkout_state_path(:payment)
     end
 
     # Mollie might send us information about a transaction through the webhook.

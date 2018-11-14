@@ -133,6 +133,9 @@ module Spree
 
       method_params.merge! params if params.present?
 
+      puts method_params.inspect
+      puts "yes"
+
       ::Mollie::Method.all(method_params)
     end
 
@@ -142,7 +145,8 @@ module Spree
           currency: order.currency,
           value: format_money(order.display_total.money),
         },
-        resource: 'orders'
+        resource: 'orders',
+        billingCountry: order.billing_address.country.try(:iso)
       }
       available_methods(params)
     end

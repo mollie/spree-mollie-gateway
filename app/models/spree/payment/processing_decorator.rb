@@ -43,6 +43,6 @@ Spree::Payment::Processing.module_eval do
       source,
       gateway_options
     )
-    handle_response(response, :pend, :failure)
+    handle_response(response, :started_processing, :failure)
   end
 end

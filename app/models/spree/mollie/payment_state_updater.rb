@@ -19,9 +19,9 @@ module Spree
         when 'authorized'
           transition_to_authorized!
         when 'shipping'
-          create_spree_shipment!
+          transition_to_shipping!
         else
-          MollieLogger.debug('Unhandled Mollie payment state received. Therefore we did not update the payment state.')
+          MollieLogger.debug("Unhandled Mollie payment state received: #{@mollie_order.status}. Therefore we did not update the payment state.")
           @spree_payment.order.update_attributes(state: 'payment', completed_at: nil)
         end
 
@@ -38,9 +38,8 @@ module Spree
 
         # If order is already paid for, don't mark it as complete again.
         @spree_payment.complete!
-        @spree_payment.order.finalize!
-        @spree_payment.order.update_attributes(state: 'complete', completed_at: Time.now)
-        MollieLogger.debug('Mollie order is paid and will transition its Spree state to completed. Order will be finalized and order confirmation will be sent.')
+        MollieLogger.debug('Mollie order is paid.')
+        complete_order!
       end
 
       def transition_to_failed!
@@ -50,12 +49,19 @@ module Spree
       end
 
       def transition_to_authorized!
-        MollieLogger.debug("Mollie order #{@mollie_order.id} has been authorized")
+        @spree_payment.pend! unless @spree_payment.pending?
+        MollieLogger.debug("Mollie order #{@mollie_order.id} has been authorized.")
+        complete_order!
       end
 
-      # @todo: Fetch Mollie lines and match with Spree order lines, create shipments where needed.
-      def create_spree_shipment!
-        MollieLogger.debug("Mollie Order #{@mollie_order.id} is shipping. Syncing order lines and creating shipments if necessary.")
+      def transition_to_shipping!
+        MollieLogger.debug("Mollie Order #{@mollie_order.id} is shipping, update to partial shipping.")
+      end
+
+      def complete_order!
+        @spree_payment.order.finalize!
+        @spree_payment.order.update_attributes(state: 'complete', completed_at: Time.now)
+        MollieLogger.debug('Order will be finalized and order confirmation will be sent.')
       end
     end
   end
