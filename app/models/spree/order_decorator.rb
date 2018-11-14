@@ -17,10 +17,6 @@ Spree::Order.class_eval do
 
     touch :completed_at
 
-    puts "confirmation_delivered: #{confirmation_delivered?}"
-    puts "paid?: #{paid?}"
-    puts "authorized?: #{authorized?}"
-
     if !confirmation_delivered? && (paid? || authorized?)
       deliver_order_confirmation_email
     end
