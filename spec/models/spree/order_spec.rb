@@ -15,7 +15,7 @@ RSpec.describe Spree::Order, type: :model do
     end
 
     it 'sets payment state to pending' do
-      expect(payment.reload.state).to eq 'pending'
+      expect(payment.reload.state).to eq 'processing'
     end
 
     it 'sets order state to complete' do

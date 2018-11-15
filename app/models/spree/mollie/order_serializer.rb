@@ -120,6 +120,18 @@ module Spree
         }
       end
 
+      def serialize_discounts
+        {
+            type: 'discount',
+            name: 'Discount',
+            quantity: 1,
+            unitPrice: {
+                currency: @order.currency,
+                value: format_money(@order.display_adjustment_total.money)
+            },
+        }
+      end
+
       def serialize_line_item(line)
         {
           type: 'physical',
