@@ -9,13 +9,12 @@ module Spree
       attr_accessor :mollie_order, :order
 
       def mollie_order
-        ::Mollie::Order.get(mollie_order_id, {
-            api_key: api_key
-        })
+        ::Mollie::Order.get(mollie_order_id,
+                            api_key: api_key)
       end
 
       def get_line_by_id(line_item_id)
-        @mollie_order.lines.detect {|line| line.sku.start_with?("#{line_item_id}-")}
+        @mollie_order.lines.detect { |line| line.sku.start_with?("#{line_item_id}-") }
       end
 
       def id
@@ -23,11 +22,11 @@ module Spree
       end
 
       def shipping_fees
-        @mollie_order.lines.select {|line| line.type === 'shipping_fee' && line.status === 'authorized'}
+        @mollie_order.lines.select { |line| line.type === 'shipping_fee' && line.status === 'authorized' }
       end
 
       def discounts
-        @mollie_order.lines.select {|line| line.type === 'discount' && line.status === 'authorized'}
+        @mollie_order.lines.select { |line| line.type === 'discount' && line.status === 'authorized' }
       end
 
       def collect_fees_on_first_shipment?
