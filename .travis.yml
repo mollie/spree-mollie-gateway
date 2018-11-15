@@ -1,15 +1,19 @@
 sudo: false
+dist: trusty
 
 language: ruby
 
-rvm:
-  - 2.3.7
-  - 2.4.4
-  - 2.5.1
+gemfile:
+  - gemfiles/spree_3_2.gemfile
+  - gemfiles/spree_3_5.gemfile
+  - gemfiles/spree_3_6.gemfile
 
-before_install:
-  - gem update --system
-  - gem install bundler
+rvm:
+  - 2.5.0
+
+script:
+  - bundle exec rake test_app
+  - bundle exec rake spec
 
 deploy:
   provider: rubygems
@@ -24,12 +28,3 @@ deploy:
 env:
   matrix:
     secure: ftw4Vv/ri+oxmuKcKX3MElYurqR/HHSuChyx8RM7ixfP9+l87jr772OGtvg0v0neW2CCz9ot+4SXL+dewFELTr6+8rstT0C1Lcyn7ANTpBp80bnMpHZrpJFkDUYne17r8kA+OUkW71OC1RrTTfa9mfSTd9g1wKSbfbKsQvZ1Q/mmwAAX7b1YyR0k83tJO23vr1Yx4GU7RNhuv+uTTNz0kuO4ezbv5WR1wjKQQsJwcc72WDsDyqZq5o9SVxA0fFe4666v1yheBZsX5gcWSugwtRQqD8fp1Era1T+11mJDk6S/4wZu/vRrOQCEkaFYdYtY3owVg8X3JVnAgtsiTDLt+s+tkZPTfTq56f3EqIEpbZQ6x906zQfGBosVBpWO1Bn+cKMGFrURWwr+19dOHU+jXYUfvV5EE12aJq6EV82IvveK2YhZ5+axP7JYkQDjwYJcuQd4ONQvagHf1YGeqLiGB5SuXEYBRv1521276inp2DOqUNjfquQwqWSy3Q2iQ/0yrAKcjYgYBk4yS8HkpaLsYd1EzgxW5IllJ+E040ViSddIQLHpDI9cmg9/uPFaVyHxWDMNOBMOAhq7znPAEtDfG6KnRmXswqkVfR7XM7ObIX8kdpGwc/cHGZwPD1595BHCcc0y5FkyRMY9KzTvj13yNdO61icIJa0PoQzfypaKuQQ=
-
-script:
-  - bundle exec rake test_app
-  - bundle exec rake spec
-
-gemfile:
-  - gemfiles/spree_3_2.gemfile
-  - gemfiles/spree_3_5.gemfile
-  - gemfiles/spree_3_6.gemfile
