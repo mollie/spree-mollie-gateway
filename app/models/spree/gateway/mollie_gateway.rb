@@ -103,6 +103,14 @@ module Spree
       end
     end
 
+    def authorize(*args)
+      ActiveMerchant::Billing::Response.new(true, 'Mollie will automatically capture the amount after creating a shipment')
+    end
+
+    def capture(*args)
+      ActiveMerchant::Billing::Response.new(true, 'Mollie will automatically capture the amount after creating a shipment')
+    end
+
     def cancel(transaction_id)
       MollieLogger.debug("Starting cancelation for #{transaction_id}")
 

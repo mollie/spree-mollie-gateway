@@ -24,6 +24,10 @@ Spree::Order.class_eval do
     consider_risk
   end
 
+  def mollie_order
+    Spree::Mollie::Order.new(self)
+  end
+
   def authorized?
     payments.last.authorized?
   end
