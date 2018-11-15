@@ -22,6 +22,18 @@ module Spree
         @mollie_order.id
       end
 
+      def shipping_fees
+        @mollie_order.lines.select {|line| line.type === 'shipping_fee' && line.status === 'authorized'}
+      end
+
+      def discounts
+        @mollie_order.lines.select {|line| line.type === 'discount' && line.status === 'authorized'}
+      end
+
+      def collect_fees_on_first_shipment?
+        gateway.get_preference(:collect_shipping_costs_and_discounts_on_first_shipment)
+      end
+
       private
 
       def mollie_order_id
@@ -36,8 +48,11 @@ module Spree
         @order.payments.last
       end
 
+      def gateway
+        Spree::PaymentMethod.find_by_type 'Spree::Gateway::MollieGateway'
+      end
+
       def api_key
-        gateway = Spree::PaymentMethod.find_by_type 'Spree::Gateway::MollieGateway'
         gateway.get_preference(:api_key)
       end
     end
