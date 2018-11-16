@@ -56,6 +56,10 @@ module Spree
       MollieLogger.debug("About to create payment for order #{gateway_options[:order_id]}")
 
       begin
+        # First of all, invalidate all previous Mollie orders to prevent multiple paid orders
+        invalidate_previous_orders(gateway_options[:order].id)
+
+        # Create a new Mollie order and update the payment source
         order_params = prepare_order_params(money, source, gateway_options)
         mollie_order = ::Mollie::Order.create(order_params)
         MollieLogger.debug("Mollie order #{mollie_order.id} created for Spree order #{gateway_options[:order_id]}")
@@ -171,7 +175,7 @@ module Spree
         api_key: get_preference(:api_key)
       )
 
-      MollieLogger.debug("Checking Mollie payment status. Mollie payment has status #{mollie_order.status}")
+      MollieLogger.debug("Checking Mollie order status. Mollie order has status #{mollie_order.status}")
       update_by_mollie_status!(mollie_order, spree_payment)
     end
 
@@ -187,6 +191,27 @@ module Spree
         api_key: get_preference(:api_key)
       }
       Spree::Mollie::OrderSerializer.serialize(money, source, gateway_options, gateway_preferences)
+    end
+
+    def invalidate_previous_orders(spree_order_id)
+      api_key = get_preference(:api_key)
+      Spree::Payment.where(order_id: spree_order_id, state: 'processing').each do |payment|
+        begin
+          mollie_order_id = payment.source.payment_id
+          order = ::Mollie::Order.get(
+            mollie_order_id,
+            api_key: api_key
+          )
+          if order.cancelable?
+            ::Mollie::Order.cancel(
+              mollie_order_id,
+              api_key: api_key
+            )
+          end
+        rescue ::Mollie::Exception => e
+          MollieLogger.debug("Failed to cancel order: #{e.message}")
+        end
+      end
     end
   end
 end

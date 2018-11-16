@@ -83,9 +83,7 @@ module Spree
         @order.line_items.each do |line|
           order_lines << serialize_line_item(line)
         end
-        if @order.has_order_adjustments?
-          order_lines << serialize_discounts
-        end
+        order_lines << serialize_discounts if @order.has_order_adjustments?
         order_lines << serialize_shipping_costs
       end
 
@@ -133,12 +131,12 @@ module Spree
             value: format_money(@order.display_order_adjustment_total.money)
           },
           totalAmount: {
-              currency: @order.currency,
-              value: format_money(@order.display_order_adjustment_total.money)
+            currency: @order.currency,
+            value: format_money(@order.display_order_adjustment_total.money)
           },
           vatAmount: {
-              currency: @order.currency,
-              value: '0.00'
+            currency: @order.currency,
+            value: '0.00'
           },
           vatRate: '0'
         }
