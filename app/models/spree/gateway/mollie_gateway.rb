@@ -100,18 +100,16 @@ module Spree
     end
 
     def cancel(mollie_order_id)
-      MollieLogger.debug("Starting cancelation for #{mollie_order_id}")
+      MollieLogger.debug("Starting cancellation for #{mollie_order_id}")
 
       begin
         mollie_order = ::Mollie::Order.get(
           mollie_order_id,
           api_key: get_preference(:api_key)
         )
-        MollieLogger.debug("mollie_order: #{mollie_order}")
         if mollie_order.cancelable?
-          MollieLogger.debug('order is cancelable')
           cancel_order!(mollie_order_id)
-          ActiveMerchant::Billing::Response.new(true, 'Mollie payment has been cancelled.')
+          ActiveMerchant::Billing::Response.new(true, 'Mollie order has been cancelled.')
         else
           MollieLogger.debug("Spree order #{mollie_order_id} has been canceled, could not cancel Mollie order.")
           ActiveMerchant::Billing::Response.new(true, 'Spree order has been canceled, could not cancel Mollie order.')
