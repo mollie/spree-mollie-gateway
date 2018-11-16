@@ -38,7 +38,7 @@ module Spree
 
         # If order is already paid for, don't mark it as complete again.
         @spree_payment.complete!
-        MollieLogger.debug('Mollie order is paid.')
+        MollieLogger.debug('Mollie order has been paid for.')
         complete_order!
       end
 
@@ -55,7 +55,7 @@ module Spree
       end
 
       def transition_to_shipping!
-        MollieLogger.debug("Mollie Order #{@mollie_order.id} is shipping, update to partial shipping.")
+        MollieLogger.debug("Mollie order #{@mollie_order.id} is shipping, update to partial shipping.")
       end
 
       def complete_order!
