@@ -51,6 +51,7 @@ module Spree
       end.map(&:attributes)
     end
 
+    # Create Mollie order
     def process(money, source, gateway_options)
       MollieLogger.debug("About to create payment for order #{gateway_options[:order_id]}")
 
