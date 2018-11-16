@@ -47,6 +47,10 @@ module Spree
         'Giropay'
       when ::Mollie::Method::DIRECTDEBIT then
         'SEPA Direct debit'
+      when ::Mollie::Method::KLARNASLICEIT then
+        'Klarna Slice it'
+      when ::Mollie::Method::KLARNAPAYLATER then
+        'Klarna Pay Later'
       else
         'Mollie'
       end
