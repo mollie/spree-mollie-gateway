@@ -1,4 +1,6 @@
 Spree::Order.class_eval do
+  money_methods :order_adjustment_total
+
   # Make sure the order confirmation is delivered when the order has been paid for.
   def finalize!
     # lock all adjustments (coupon promotions, etc.)
@@ -30,5 +32,13 @@ Spree::Order.class_eval do
 
   def authorized?
     payments.last.authorized?
+  end
+
+  def order_adjustment_total
+    adjustments.eligible.sum(:amount)
+  end
+
+  def has_order_adjustments?
+    order_adjustment_total.abs > 0
   end
 end
