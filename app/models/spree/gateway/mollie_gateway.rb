@@ -78,7 +78,7 @@ module Spree
     # Create a Mollie customer which can be passed with a payment.
     # Required for one-click Mollie payments.
     def create_customer(user)
-      customer = Mollie::Customer.create(
+      customer = ::Mollie::Customer.create(
         email: user.email,
         api_key: get_preference(:api_key)
       )
@@ -87,56 +87,38 @@ module Spree
     end
 
     # Create a new Mollie refund
-    def credit(_credit_cents, payment_id, options)
-      order = options[:originator].try(:payment).try(:order)
-      order_number = order.try(:number)
-      order_currency = order.try(:currency)
-      MollieLogger.debug("Starting refund for order #{order_number}")
-
-      begin
-        ::Mollie::Payment::Refund.create(
-          payment_id: payment_id,
-          amount: {
-            value: format_money(order.display_total.money),
-            currency: order_currency
-          },
-          description: "Refund Spree Order ID: #{order_number}",
-          api_key: get_preference(:api_key)
-        )
-        MollieLogger.debug("Successfully refunded #{order.display_total} for order #{order_number}")
-        ActiveMerchant::Billing::Response.new(true, 'Refund successful')
-      rescue ::Mollie::Exception => e
-        MollieLogger.debug("Refund failed for order #{order_number}: #{e.message}")
-        ActiveMerchant::Billing::Response.new(false, 'Refund unsuccessful')
-      end
+    def credit(_credit_cents, _payment_id, _options)
+      ActiveMerchant::Billing::Response.new(false, 'Refunding Mollie orders is not yet supported in Spree. Please refund your order via Mollie Dashboard')
     end
 
     def authorize(*_args)
-      ActiveMerchant::Billing::Response.new(true, 'Mollie will automatically capture the amount after creating a shipment')
+      ActiveMerchant::Billing::Response.new(true, 'Mollie will automatically capture the amount after creating a shipment.')
     end
 
     def capture(*_args)
-      ActiveMerchant::Billing::Response.new(true, 'Mollie will automatically capture the amount after creating a shipment')
+      ActiveMerchant::Billing::Response.new(true, 'Mollie will automatically capture the amount after creating a shipment.')
     end
 
-    def cancel(transaction_id)
-      MollieLogger.debug("Starting cancelation for #{transaction_id}")
+    def cancel(mollie_order_id)
+      MollieLogger.debug("Starting cancelation for #{mollie_order_id}")
 
       begin
-        mollie_payment = ::Mollie::Payment.get(
-          transaction_id,
+        mollie_order = ::Mollie::Order.get(
+          mollie_order_id,
           api_key: get_preference(:api_key)
         )
-        if mollie_payment.cancelable?
-          mollie_payment.delete(transaction_id)
-          ActiveMerchant::Billing::Response.new(true, 'Mollie payment has been cancelled')
+        MollieLogger.debug("mollie_order: #{mollie_order}")
+        if mollie_order.cancelable?
+          MollieLogger.debug('order is cancelable')
+          cancel_order!(mollie_order_id)
+          ActiveMerchant::Billing::Response.new(true, 'Mollie payment has been cancelled.')
         else
-          MollieLogger.debug("Mollie payment #{transaction_id} is not cancelable. Skipping any further updates.")
-          ActiveMerchant::Billing::Response.new(true, 'Mollie payment has not been cancelled because it is not cancelable')
+          MollieLogger.debug("Spree order #{mollie_order_id} has been canceled, could not cancel Mollie order.")
+          ActiveMerchant::Billing::Response.new(true, 'Spree order has been canceled, could not cancel Mollie order.')
         end
-      rescue Mollie::Exception => e
-        MollieLogger.debug("Payment #{transaction_id} could not be canceled: #{e.message}")
-        ActiveMerchant::Billing::Response.new(false, 'Payment cancellation unsuccessful')
+      rescue ::Mollie::Exception => e
+        MollieLogger.debug("Order #{mollie_order_id} could not be canceled: #{e.message}")
+        ActiveMerchant::Billing::Response.new(false, 'Order cancellation unsuccessful.')
       end
     end
 
@@ -148,9 +130,6 @@ module Spree
       }
 
       method_params.merge! params if params.present?
-
-      puts method_params.inspect
-      puts 'yes'
 
       ::Mollie::Method.all(method_params)
     end
@@ -175,7 +154,7 @@ module Spree
         api_key: get_preference(:api_key)
       )
 
-      MollieLogger.debug("Checking Mollie order status. Mollie order has status #{mollie_order.status}")
+      MollieLogger.debug("Checking Mollie order status for order #{mollie_order_id}. Its status is: #{mollie_order.status}")
       update_by_mollie_status!(mollie_order, spree_payment)
     end
 
@@ -193,23 +172,25 @@ module Spree
       Spree::Mollie::OrderSerializer.serialize(money, source, gateway_options, gateway_preferences)
     end
 
+    def cancel_order!(mollie_order_id)
+      ::Mollie::Order.cancel(
+        mollie_order_id,
+        api_key: get_preference(:api_key)
+      )
+      MollieLogger.debug("Canceled Mollie order #{mollie_order_id}")
+    end
+
     def invalidate_previous_orders(spree_order_id)
-      api_key = get_preference(:api_key)
       Spree::Payment.where(order_id: spree_order_id, state: 'processing').each do |payment|
         begin
           mollie_order_id = payment.source.payment_id
           order = ::Mollie::Order.get(
             mollie_order_id,
-            api_key: api_key
+            api_key: get_preference(:api_key)
           )
-          if order.cancelable?
-            ::Mollie::Order.cancel(
-              mollie_order_id,
-              api_key: api_key
-            )
-          end
+          cancel_order!(mollie_order_id) if order.cancelable?
         rescue ::Mollie::Exception => e
-          MollieLogger.debug("Failed to cancel order: #{e.message}")
+          MollieLogger.debug("Failed to invalidate previous order: #{e.message}")
         end
       end
     end
