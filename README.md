@@ -90,8 +90,8 @@ Want to help us make our API client even better? We take [pull requests](https:/
 Contact: [www.mollie.com](https://www.mollie.com) — info@mollie.com — +31 20-612 88 55
 
 + [More information about iDEAL via Mollie](https://www.mollie.com/en/payments/ideal/)
-+ [More information about Klarna Slice It via Mollie](https://www.mollie.com/en/payments/klarna-pay-later)
-+ [More information about Klarna Pay Later via Mollie](https://www.mollie.com/en/payments/klarna-slice-it)
++ [More information about Klarna Pay Later via Mollie](https://www.mollie.com/en/payments/klarna-pay-later)
++ [More information about Klarna Slice It via Mollie](https://www.mollie.com/en/payments/klarna-slice-it)
 + [More information about Credit card via Mollie](https://www.mollie.com/en/payments/credit-card/)
 + [More information about Bancontact via Mollie](https://www.mollie.com/en/payments/bancontact/)
 + [More information about SOFORT Banking via Mollie](https://www.mollie.com/en/payments/sofort/)
