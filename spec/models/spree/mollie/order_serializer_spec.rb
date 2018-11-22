@@ -3,7 +3,8 @@ require 'spec_helper'
 RSpec.describe Spree::Mollie::OrderSerializer, type: :model do
   let(:order) { create :order_with_line_items, line_items_count: 1 }
   let(:gateway) { create(:mollie_gateway, auto_capture: true) }
-  let(:payment) { create(:mollie_payment, payment_method: gateway) }
+  let(:payment) { create(:mollie_payment, payment_method: gateway, order: order) }
+  let(:calculator) { Calculator::FlatRate.new(preferred_amount: 10) }
   let(:payment_source) { payment.payment_source }
   let(:line_item) { order.line_items.first }
   let(:line_item_promo) do
@@ -39,7 +40,15 @@ RSpec.describe Spree::Mollie::OrderSerializer, type: :model do
   end
 
   context 'serialization' do
-    let(:serialized_order) { Spree::Mollie::OrderSerializer.serialize(order_total, payment_source, payment.gateway_options, gateway_preferences) }
+    let(:serialized_order) do
+      serializer = Spree::Mollie::OrderSerializer.new(
+        order_total,
+        payment_source,
+        payment.gateway_options,
+        gateway_preferences
+      )
+      serializer.serialize
+    end
 
     it 'contains amount' do
       expect(serialized_order[:amount][:currency]).to eq 'USD'
@@ -73,51 +82,131 @@ RSpec.describe Spree::Mollie::OrderSerializer, type: :model do
       expect(serialized_order[:method]).to eq 'creditcard'
     end
 
-    context 'billing_address' do
-      let(:billing_address) { serialized_order[:billingAddress] }
+    context 'billing address' do
+      subject { serialized_order[:billingAddress] }
 
       it 'has a billing address' do
-        expect(billing_address).to be_kind_of Hash
+        expect(subject).to be_kind_of Hash
       end
 
       it 'has streetAndNumber' do
-        expect(billing_address[:streetAndNumber]).to eq '10 Lovely Street'
+        expect(subject[:streetAndNumber]).to eq '10 Lovely Street'
       end
 
       it 'has city' do
-        expect(billing_address[:city]).to eq 'Herndon'
+        expect(subject[:city]).to eq 'Herndon'
       end
 
       it 'has postalCode' do
-        expect(billing_address[:postalCode]).to eq '35005'
+        expect(subject[:postalCode]).to eq '35005'
       end
 
       it 'has country' do
-        expect(billing_address[:country]).to eq 'US'
+        expect(subject[:country]).to eq 'US'
       end
 
       it 'has region' do
-        expect(billing_address[:region]).not_to be_empty
+        expect(subject[:region]).not_to be_empty
       end
 
       it 'has givenName' do
-        expect(billing_address[:givenName]).to eq 'John'
+        expect(subject[:givenName]).to eq 'John'
       end
 
       it 'has familyname' do
-        expect(billing_address[:familyName]).to eq 'Doe'
+        expect(subject[:familyName]).to eq 'Doe'
       end
 
       it 'has email' do
-        expect(billing_address[:email]).not_to be_empty
+        expect(subject[:email]).not_to be_empty
       end
     end
 
-    context 'shipping_fee' do
-      let(:shipping_fee) { serialized_order[:lines].first }
+    context 'shipping fee' do
+      subject { serialized_order[:lines].detect { |line| line[:type] == 'shipping_fee' } }
+
+      let!(:set_ship_total) do
+        order.ship_total = 10
+        order.save!
+      end
+
+      let(:serialized_order) do
+        serializer = Spree::Mollie::OrderSerializer.new(
+          order_total,
+          payment_source,
+          payment.gateway_options,
+          gateway_preferences
+        )
+        serializer.serialize
+      end
 
       it 'has a quantity of 1' do
-        expect(shipping_fee[:quantity]).to eq(1)
+        expect(subject[:quantity]).to eq(1)
+      end
+
+      it 'is present' do
+        expect(subject).not_to be_empty
+      end
+
+      it 'has unitPrice' do
+        expect(subject[:unitPrice][:value]).to eq('10.00')
+        expect(subject[:unitPrice][:currency]).to eq('USD')
+      end
+
+      it 'has no discountAmount' do
+        expect(subject[:discountAmount]).to be_nil
+      end
+
+      it 'has totalAmount' do
+        expect(subject[:totalAmount][:value]).to eq('10.00')
+        expect(subject[:totalAmount][:currency]).to eq('USD')
+      end
+    end
+
+    context 'shipping discount' do
+      # Set up free shipping promotion
+      subject { serialized_order[:lines].detect { |line| line[:name] == 'Shipping discount' } }
+
+      let(:promotion) { create(:promotion) }
+      let(:action) { Spree::Promotion::Actions::FreeShipping.create }
+      let(:payload) { { order: order } }
+
+      before do
+        order.shipments << create(:shipment)
+        promotion.promotion_actions << action
+        action.perform(payload)
+      end
+
+      let(:serialized_order) do
+        serializer = Spree::Mollie::OrderSerializer.new(
+          order_total,
+          payment_source,
+          payment.gateway_options,
+          gateway_preferences
+        )
+        serializer.serialize
+      end
+
+      it 'has been applied' do
+        expect(order.shipment_adjustments.count).to eq(1)
+      end
+
+      it 'is present' do
+        expect(subject).not_to be_empty
+      end
+
+      it 'has unitPrice' do
+        expect(subject[:unitPrice][:value]).to eq('-100.00')
+        expect(subject[:unitPrice][:currency]).to eq('USD')
+      end
+
+      it 'has no discountAmount' do
+        expect(subject[:discountAmount]).to be_nil
+      end
+
+      it 'has totalAmount' do
+        expect(subject[:totalAmount][:value]).to eq('-100.00')
+        expect(subject[:totalAmount][:currency]).to eq('USD')
       end
     end
   end
