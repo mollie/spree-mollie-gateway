@@ -42,10 +42,10 @@ RSpec.describe Spree::Mollie::OrderSerializer, type: :model do
   context 'serialization' do
     let(:serialized_order) do
       serializer = Spree::Mollie::OrderSerializer.new(
-          order_total,
-          payment_source,
-          payment.gateway_options,
-          gateway_preferences
+        order_total,
+        payment_source,
+        payment.gateway_options,
+        gateway_preferences
       )
       serializer.serialize
     end
@@ -132,10 +132,10 @@ RSpec.describe Spree::Mollie::OrderSerializer, type: :model do
 
       let(:serialized_order) do
         serializer = Spree::Mollie::OrderSerializer.new(
-            order_total,
-            payment_source,
-            payment.gateway_options,
-            gateway_preferences
+          order_total,
+          payment_source,
+          payment.gateway_options,
+          gateway_preferences
         )
         serializer.serialize
       end
@@ -179,10 +179,10 @@ RSpec.describe Spree::Mollie::OrderSerializer, type: :model do
 
       let(:serialized_order) do
         serializer = Spree::Mollie::OrderSerializer.new(
-            order_total,
-            payment_source,
-            payment.gateway_options,
-            gateway_preferences
+          order_total,
+          payment_source,
+          payment.gateway_options,
+          gateway_preferences
         )
         serializer.serialize
       end
