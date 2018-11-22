@@ -85,6 +85,9 @@ module Spree
         end
         order_lines << serialize_discounts if @order.has_order_adjustments?
         order_lines << serialize_shipping_costs
+        order_lines << serialize_shipping_discounts if @order.shipping_discount > 0
+
+        order_lines
       end
 
       def serialize_address(address)
@@ -133,6 +136,27 @@ module Spree
           totalAmount: {
             currency: @order.currency,
             value: format_money(@order.display_order_adjustment_total.money)
+          },
+          vatAmount: {
+            currency: @order.currency,
+            value: '0.00'
+          },
+          vatRate: '0'
+        }
+      end
+
+      def serialize_shipping_discounts
+        {
+          type: 'discount',
+          name: 'Shipping discount',
+          quantity: 1,
+          unitPrice: {
+            currency: @order.currency,
+            value: format_money(-@order.display_shipping_discount.money)
+          },
+          totalAmount: {
+            currency: @order.currency,
+            value: format_money(-@order.display_shipping_discount.money)
           },
           vatAmount: {
             currency: @order.currency,

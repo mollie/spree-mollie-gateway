@@ -1,5 +1,5 @@
 Spree::Order.class_eval do
-  money_methods :order_adjustment_total
+  money_methods :order_adjustment_total, :shipping_discount
 
   # Make sure the order confirmation is delivered when the order has been paid for.
   def finalize!
