@@ -83,9 +83,16 @@ module Spree
         @order.line_items.each do |line|
           order_lines << serialize_line_item(line)
         end
-        order_lines << serialize_discounts if @order.has_order_adjustments?
+
+        if @order.has_order_adjustments?
+          order_lines << serialize_discounts
+        end
+
         order_lines << serialize_shipping_costs
-        order_lines << serialize_shipping_discounts if @order.shipping_discount > 0
+
+        if @order.shipping_discount.positive?
+          order_lines << serialize_shipping_discounts
+        end
 
         order_lines
       end

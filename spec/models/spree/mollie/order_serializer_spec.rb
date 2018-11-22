@@ -41,7 +41,12 @@ RSpec.describe Spree::Mollie::OrderSerializer, type: :model do
 
   context 'serialization' do
     let(:serialized_order) do
-      serializer = Spree::Mollie::OrderSerializer.new(order_total, payment_source, payment.gateway_options, gateway_preferences)
+      serializer = Spree::Mollie::OrderSerializer.new(
+          order_total,
+          payment_source,
+          payment.gateway_options,
+          gateway_preferences
+      )
       serializer.serialize
     end
 
@@ -118,7 +123,7 @@ RSpec.describe Spree::Mollie::OrderSerializer, type: :model do
     end
 
     context 'shipping fee' do
-      subject { serialized_order[:lines].detect { |line| line[:type] === 'shipping_fee' } }
+      subject { serialized_order[:lines].detect { |line| line[:type] == 'shipping_fee' } }
 
       let!(:set_ship_total) do
         order.ship_total = 10
@@ -126,7 +131,12 @@ RSpec.describe Spree::Mollie::OrderSerializer, type: :model do
       end
 
       let(:serialized_order) do
-        serializer = Spree::Mollie::OrderSerializer.new(order_total, payment_source, payment.gateway_options, gateway_preferences)
+        serializer = Spree::Mollie::OrderSerializer.new(
+            order_total,
+            payment_source,
+            payment.gateway_options,
+            gateway_preferences
+        )
         serializer.serialize
       end
 
@@ -155,7 +165,7 @@ RSpec.describe Spree::Mollie::OrderSerializer, type: :model do
 
     context 'shipping discount' do
       # Set up free shipping promotion
-      subject { serialized_order[:lines].detect { |line| line[:name] === 'Shipping discount' } }
+      subject { serialized_order[:lines].detect { |line| line[:name] == 'Shipping discount' } }
 
       let(:promotion) { create(:promotion) }
       let(:action) { Spree::Promotion::Actions::FreeShipping.create }
@@ -168,7 +178,12 @@ RSpec.describe Spree::Mollie::OrderSerializer, type: :model do
       end
 
       let(:serialized_order) do
-        serializer = Spree::Mollie::OrderSerializer.new(order_total, payment_source, payment.gateway_options, gateway_preferences)
+        serializer = Spree::Mollie::OrderSerializer.new(
+            order_total,
+            payment_source,
+            payment.gateway_options,
+            gateway_preferences
+        )
         serializer.serialize
       end
 
