@@ -28,4 +28,12 @@ Spree::Payment.class_eval do
       false
     end
   end
+
+  def after_pay_method?
+    if source.is_a? Spree::MolliePaymentSource
+      return source.payment_method_name == ::Mollie::Method::KLARNAPAYLATER || source.payment_method_name == ::Mollie::Method::KLARNASLICEIT
+    else
+      false
+    end
+  end
 end
