@@ -23,6 +23,7 @@ module Spree
           @spree_payment.source.update(status: @spree_payment.state)
         when 'shipping'
           transition_to_shipping!
+          @spree_payment.source.update(status: @spree_payment.state)
         else
           MollieLogger.debug("Unhandled Mollie payment state received: #{@mollie_order.status}. Therefore we did not update the payment state.")
           @spree_payment.order.update_attributes(state: 'payment', completed_at: nil)
