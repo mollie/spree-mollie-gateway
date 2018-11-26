@@ -1,3 +1,3 @@
 module SpreeMollieGateway
-  VERSION = '2.1.2'
+  VERSION = '3.0.2'.freeze
 end

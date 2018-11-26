@@ -1,4 +1,7 @@
-[<img src="https://www.mollie.com/assets/images/mollie/logo-black.svg" width="110">](https://www.mollie.com/)
+<p align="center">
+  <img src="https://info.mollie.com/hubfs/github/spree/logo.png" width="128" height="128"/>
+</p>
+<h1 align="center">Mollie for Spree Commerce</h1>
 
 [![Build Status](https://travis-ci.org/mollie/spree-mollie-gateway.svg?branch=master)](https://travis-ci.org/mollie/spree-mollie-gateway) [![Gem Version](https://badge.fury.io/rb/spree_mollie_gateway.svg)](https://badge.fury.io/rb/spree_mollie_gateway) 
   
@@ -34,8 +37,7 @@ Please go to the [signup page](https://www.mollie.com/signup) to create a new Mo
 * Allow returning customers to <a href="https://www.mollie.com/en/features/checkout" title="One-click payments">use their previous payment details</a> and pay instantly.
 
 ## Requirements
-- Spree 3.4.x or newer.
-- Rails 5.1.x or newer.  
+- Spree 3.3.x or newer.  
 
 ## Installation
 
@@ -88,6 +90,8 @@ Want to help us make our API client even better? We take [pull requests](https:/
 Contact: [www.mollie.com](https://www.mollie.com) — info@mollie.com — +31 20-612 88 55
 
 + [More information about iDEAL via Mollie](https://www.mollie.com/en/payments/ideal/)
++ [More information about Klarna Pay Later via Mollie](https://www.mollie.com/en/payments/klarna-pay-later)
++ [More information about Klarna Slice It via Mollie](https://www.mollie.com/en/payments/klarna-slice-it)
 + [More information about Credit card via Mollie](https://www.mollie.com/en/payments/credit-card/)
 + [More information about Bancontact via Mollie](https://www.mollie.com/en/payments/bancontact/)
 + [More information about SOFORT Banking via Mollie](https://www.mollie.com/en/payments/sofort/)

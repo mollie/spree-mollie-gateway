@@ -1,5 +1,5 @@
 Spree::Payment::Processing.module_eval do
-  def process!(amount = nil)
+  def process!(_amount = nil)
     if payment_method.is_a? Spree::Gateway::MollieGateway
       process_with_mollie
     else
@@ -38,11 +38,11 @@ Spree::Payment::Processing.module_eval do
   def process_with_mollie
     amount ||= money.money
     started_processing!
-    response = payment_method.create_transaction(
-        amount,
-        source,
-        gateway_options
+    response = payment_method.process(
+      amount,
+      source,
+      gateway_options
     )
-    handle_response(response, :pend, :failure)
+    handle_response(response, :started_processing, :failure)
   end
 end

@@ -5,7 +5,7 @@ module SpreeMollieGateway
 
     isolate_namespace SpreeMollieGateway
 
-    config.autoload_paths += %W(#{config.root}/lib)
+    config.autoload_paths += %W[#{config.root}/lib]
 
     # Use rspec for tests
     config.generators do |g|
@@ -13,7 +13,7 @@ module SpreeMollieGateway
     end
 
     def self.activate
-      Dir.glob(File.join(File.dirname(__FILE__), "../../app/**/*_decorator*.rb")) do |c|
+      Dir.glob(File.join(File.dirname(__FILE__), '../../app/**/*_decorator*.rb')) do |c|
         Rails.configuration.cache_classes ? require(c) : load(c)
       end
 
@@ -23,6 +23,9 @@ module SpreeMollieGateway
       Spree::Api::ApiHelpers.payment_source_attributes << :payment_method_name
       Spree::Api::ApiHelpers.payment_source_attributes << :issuer
       Spree::Api::ApiHelpers.payment_source_attributes << :payment_url
+
+      # Orders should be shippable whenever they're authorized
+      Spree::Config[:auto_capture_on_dispatch] = true
     end
 
     config.to_prepare &method(:activate).to_proc
