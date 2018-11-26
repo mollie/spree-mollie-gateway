@@ -12,6 +12,8 @@ module Spree
 
       def update
         case @mollie_order.status
+        when 'created'
+          MollieLogger.debug('Mollie order has been created, no spree update has been taken to back this status')
         when 'paid', 'completed'
           transition_to_paid!
           @spree_payment.source.update(status: @spree_payment.state)
