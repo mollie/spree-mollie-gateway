@@ -80,7 +80,7 @@
           <strong><%= Spree.t(:payment) %>:</strong>
         </td>
         <td id='payment_status'>
-          <% if @order.payments.count > 0 && @order.payments.last.source.present? %>
+          <% if @order.payments.count > 0 && @order.payments.last.source.present? && @order.payments.last.source_type == "Spree::MolliePaymentSource" %>
             <% if @order.payments.last.after_pay_method? && @order.payments.last.authorized? %>
               <span class="label label-authorized">authorized</span>
             <% else %>
