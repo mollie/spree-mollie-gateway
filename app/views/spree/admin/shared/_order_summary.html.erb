@@ -84,7 +84,7 @@
             <% if @order.payments.last.after_pay_method? && @order.payments.last.authorized? %>
               <span class="label label-authorized">authorized</span>
             <% else %>
-              <span class="label label-<%= @order.payments.last.source.status %>"><%= @order.payments.last.source.status %></span>
+              <span class="label label-<%= @order.payment_state %>"><%= @order.payment_state %></span>
             <% end %>
           <% end %>
         </td>

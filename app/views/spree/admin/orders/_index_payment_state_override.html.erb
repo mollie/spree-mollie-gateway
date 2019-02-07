@@ -1,0 +1,10 @@
+<td>
+  <% if order.payments.count > 0 && order.payments.last.source.present? %>
+    <% if order.payments.last.after_pay_method? && order.payments.last.authorized? %>
+      <span class="label label-authorized"><%= link_to 'authorized', admin_order_payments_path(order) %></span>
+    <% else %>
+      <span class="label label-<%= order.payment_state %>"><%= link_to Spree.t("payment_states.#{order.payment_state}"), admin_order_payments_path(order) %></span>
+      <span class="icon icon-filter filterable js-add-filter" data-ransack-field="q_payment_state_eq" data-ransack-value="<%= order.payment_state %>"></span>
+    <% end %>
+  <% end %>
+</td>

@@ -63,10 +63,9 @@ module Spree
       end
 
       def complete_order!
-        return if @spree_payment.order.completed?
+        @spree_payment.order.send_confirmation_email! if @spree_payment.order
         @spree_payment.order.finalize!
-        @spree_payment.order.update_attributes(state: 'complete', completed_at: Time.now)
-        MollieLogger.debug('Order will be finalized and order confirmation will be sent.')
+        Spree::MollieLogger.debug('Order will be finalized and order confirmation will be sent.')
       end
     end
   end

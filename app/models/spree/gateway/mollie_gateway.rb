@@ -86,9 +86,34 @@ module Spree
       customer
     end
 
+    # # Create a new Mollie refund
+    # def credit(_credit_cents, _payment_id, _options)
+    #   ActiveMerchant::Billing::Response.new(false, 'Refunding Mollie orders is not yet supported in Spree. Please refund your order via Mollie Dashboard')
+    # end
+
     # Create a new Mollie refund
-    def credit(_credit_cents, _payment_id, _options)
-      ActiveMerchant::Billing::Response.new(false, 'Refunding Mollie orders is not yet supported in Spree. Please refund your order via Mollie Dashboard')
+    def credit(credit_cents, payment_id, options)
+      order = options[:originator].try(:payment).try(:order)
+      order_number = order.try(:number)
+      order_currency = order.try(:currency)
+      MollieLogger.debug("Starting refund for order #{order_number}")
+
+      begin
+        ::Mollie::Payment::Refund.create(
+            payment_id: payment_id,
+            amount: {
+                value: format_money(::Spree::Money.new(credit_cents/100.0).money),
+                currency: order_currency
+            },
+            description: "Refund Spree Order ID: #{order_number}",
+            api_key: get_preference(:api_key)
+        )
+        MollieLogger.debug("Successfully refunded #{order.display_total} for order #{order_number}")
+        ActiveMerchant::Billing::Response.new(true, 'Refund successful')
+      rescue ::Mollie::Exception => e
+        MollieLogger.debug("Refund failed for order #{order_number}: #{e.message}")
+        ActiveMerchant::Billing::Response.new(false, 'Refund unsuccessful')
+      end
     end
 
     def authorize(*_args)
