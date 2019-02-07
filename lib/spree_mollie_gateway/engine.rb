@@ -24,6 +24,8 @@ module SpreeMollieGateway
       Spree::Api::ApiHelpers.payment_source_attributes << :issuer
       Spree::Api::ApiHelpers.payment_source_attributes << :payment_url
 
+      Spree::Api::ApiHelpers.order_attributes.push :successful_payment
+
       # Orders should be shippable whenever they're authorized
       Spree::Config[:auto_capture_on_dispatch] = true
     end
