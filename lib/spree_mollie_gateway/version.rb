@@ -1,3 +1,3 @@
 module SpreeMollieGateway
-  VERSION = '3.0.4.6.coqtail'.freeze
+  VERSION = '3.0.4.8.coqtail'.freeze
 end

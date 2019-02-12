@@ -36,7 +36,7 @@ Spree::Order.class_eval do
   end
 
   def successful_payment
-    paid? || o.payments.any? {|p| p.after_pay_method? && p.authorized?}
+    paid? || payments.any? {|p| p.after_pay_method? && p.authorized?}
   end
 
   def authorized?
