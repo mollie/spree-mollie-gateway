@@ -29,6 +29,12 @@ Spree::Order.class_eval do
     consider_risk
   end
 
+  def send_confirmation_email!
+    if !confirmation_delivered? && (paid? || authorized?)
+      deliver_order_confirmation_email
+    end
+  end
+
   def mollie_order
     Spree::Mollie::Order.new(self)
   end
