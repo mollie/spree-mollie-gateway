@@ -29,6 +29,10 @@ Spree::Order.class_eval do
     consider_risk
   end
 
+  def is_paid_with_mollie?
+    payments.collect(&:payment_method).any? {|pm| pm.type == 'Spree::Gateway::MollieGateway'}
+  end
+
   def send_confirmation_email!
     if !confirmation_delivered? && (paid? || authorized?)
       deliver_order_confirmation_email
