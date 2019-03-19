@@ -87,8 +87,40 @@ module Spree
     end
 
     # Create a new Mollie refund
-    def credit(_credit_cents, _payment_id, _options)
-      ActiveMerchant::Billing::Response.new(false, 'Refunding Mollie orders is not yet supported in Spree. Please refund your order via Mollie Dashboard')
+    def credit(credit_cents, payment_id, options)
+      order = options[:originator].try(:payment).try(:order)
+      payment = options[:originator].try(:payment)
+      reimbursement = options[:originator].try(:reimbursement)
+      order_number = order.try(:number)
+      order_currency = order.try(:currency)
+      MollieLogger.debug("Starting refund for order #{order_number}")
+
+      begin
+        if reimbursement
+          mollie_order = ::Mollie::Order.get(payment.source.payment_id, {api_key: get_preference(:api_key)})
+          mollie_order_refund_lines = reimbursement.return_items.map do |ri|
+            line = mollie_order.lines.detect {|line| line.sku == "#{ri.inventory_unit.line_item.id}-#{ri.variant.sku}"}
+            {id: line.id, quantity: ri.inventory_unit.line_item.quantity} if line
+          end.compact
+          mollie_order.refund!({lines: mollie_order_refund_lines, api_key: get_preference(:api_key)})
+        else
+          ::Mollie::Payment::Refund.create(
+              payment_id: payment_id,
+              amount: {
+                  value: format_money(::Spree::Money.new(credit_cents / 100.0).money),
+                  currency: order_currency
+              },
+              description: "Refund Spree Order ID: #{order_number}",
+              api_key: get_preference(:api_key)
+          )
+        end
+
+        MollieLogger.debug("Successfully refunded #{order.display_total} for order #{order_number}")
+        ActiveMerchant::Billing::Response.new(true, 'Refund successful')
+      rescue ::Mollie::Exception => e
+        MollieLogger.debug("Refund failed for order #{order_number}: #{e.message}")
+        ActiveMerchant::Billing::Response.new(false, 'Refund unsuccessful')
+      end
     end
 
     def authorize(*_args)
