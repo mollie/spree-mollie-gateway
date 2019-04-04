@@ -47,6 +47,8 @@ Spree::Order.class_eval do
     paid? || payments.any? {|p| p.after_pay_method? && p.authorized?}
   end
 
+  alias paid_or_authorized? successful_payment
+
   def authorized?
     payments.last.authorized?
   end

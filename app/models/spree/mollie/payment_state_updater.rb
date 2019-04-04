@@ -28,10 +28,12 @@ module Spree
           @spree_payment.source.update(status: @spree_payment.state)
         else
           MollieLogger.debug("Unhandled Mollie payment state received: #{@mollie_order.status}. Therefore we did not update the payment state.")
-          unless @spree_payment.order.paid? || @spree_payment.order.payments.any? {|p| p.after_pay_method? && p.authorized?}
+          unless @spree_payment.order.paid_or_authorized?
             @spree_payment.order.update_attributes(state: 'payment', completed_at: nil)
           end
         end
+
+        @spree_payment.order.update_with_updater!
       end
 
       private
@@ -50,7 +52,7 @@ module Spree
 
       def transition_to_failed!
         @spree_payment.failure! unless @spree_payment.failed?
-        @spree_payment.order.update_attributes(state: 'payment', completed_at: nil)
+        @spree_payment.order.update_attributes(state: 'payment', completed_at: nil) unless @spree_payment.order.paid_or_authorized?
         MollieLogger.debug("Mollie order is #{@mollie_order.status} and will be marked as failed")
       end
 
