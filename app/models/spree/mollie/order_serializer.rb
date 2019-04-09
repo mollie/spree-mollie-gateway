@@ -97,7 +97,7 @@ module Spree
 
       def serialize_address(address)
         {
-          streetAndNumber: "#{address[:address1]} #{address[:address2]}",
+          streetAndNumber: [address[:address1], address[:address2]].join(" "),
           city: address[:city],
           postalCode: address[:zip],
           country: address[:country],
