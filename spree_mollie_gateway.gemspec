@@ -3,16 +3,16 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'spree_mollie_gateway/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'spree_mollie_gateway'
-  spec.version       = SpreeMollieGateway::VERSION
-  spec.authors       = ['Vernon de Goede']
-  spec.email         = ['vernon@mollie.com']
+  spec.name = 'spree_mollie_gateway'
+  spec.version = SpreeMollieGateway::VERSION
+  spec.authors = ['Vernon de Goede']
+  spec.email = ['vernon@mollie.com']
 
-  spec.summary       = 'Mollie payments for Spree Commerce.'
-  spec.description   = 'Mollie payment gateway for Spree Commerce.'
-  spec.homepage      = 'https://www.mollie.com'
+  spec.summary = 'Mollie payments for Spree Commerce.'
+  spec.description = 'Mollie payment gateway for Spree Commerce.'
+  spec.homepage = 'https://www.mollie.com'
 
-  spec.licenses      = ['BSD']
+  spec.licenses = ['BSD']
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
@@ -26,15 +26,16 @@ Gem::Specification.new do |spec|
   spec.files = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
   end
-  spec.bindir        = 'exe'
-  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.bindir = 'exe'
+  spec.executables = spec.files.grep(%r{^exe/}) {|f| File.basename(f)}
   spec.require_paths = ['lib']
+  spec.required_ruby_version = '>= 2.3.8'
 
-  spree_version = '>= 3.1.0'
+  spree_version = '>= 3.1.0', '< 5.0'
   spec.add_dependency 'spree_backend', spree_version
   spec.add_dependency 'spree_core', spree_version
-  spec.add_dependency 'spree_extension'
   spec.add_dependency 'spree_frontend', spree_version
+  spec.add_dependency 'spree_extension'
 
   spec.add_development_dependency 'appraisal'
   spec.add_development_dependency 'bundler', '~> 1.16'
