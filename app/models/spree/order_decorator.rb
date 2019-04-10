@@ -23,8 +23,6 @@ Spree::Order.class_eval do
       deliver_order_confirmation_email
     end
 
-    update!
-
     consider_risk
   end
 

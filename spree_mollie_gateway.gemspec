@@ -30,11 +30,11 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spree_version = '>= 3.1.0'
+  spree_version = '>= 3.1.0', '< 5.0'
   spec.add_dependency 'spree_backend', spree_version
   spec.add_dependency 'spree_core', spree_version
-  spec.add_dependency 'spree_extension'
   spec.add_dependency 'spree_frontend', spree_version
+  spec.add_dependency 'spree_extension'
 
   spec.add_development_dependency 'appraisal'
   spec.add_development_dependency 'bundler', '~> 1.16'
