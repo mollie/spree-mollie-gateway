@@ -1,4 +1,6 @@
 appraise 'spree-3-5' do
+  ENV['USE_LEGACY_BUNDLER'] = 'true'
+
   gem 'spree', '~> 3.5.0'
 end
 
