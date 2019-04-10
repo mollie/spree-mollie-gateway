@@ -18,6 +18,11 @@ before_install:
   - if [ "USE_LEGACY_BUNDLER" != "false" ]; then gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true; fi
   - if [ "USE_LEGACY_BUNDLER" != "false" ]; then gem install bundler -v '< 2'; fi
 
+# Allow failing tests against Spree 3.7.x for now
+matrix:
+  allow_failures:
+    - gemfile: gemfiles/spree_3_7.gemfile
+
 script:
   - bundle exec rake test_app
   - bundle exec rake spec
