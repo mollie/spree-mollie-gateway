@@ -13,10 +13,10 @@ gemfile:
   - gemfiles/spree_3_6.gemfile
   - gemfiles/spree_3_7.gemfile
 
-# Use legacy bundler to support Ruby 2.3.x
+# Use legacy bundler (1.x) when using Ruby 2.3.x
 before_install:
-  - 'if [ "USE_LEGACY_BUNDLER" != "false" ]; then gem uninstall -v '"'"'>= 2'"'"' -i $(rvm gemdir)@global -ax bundler || true; fi'
-  - 'if [ "USE_LEGACY_BUNDLER" != "false" ]; then gem install bundler -v '"'"'< 2'"'"'; fi'
+  - if [ "USE_LEGACY_BUNDLER" != "false" ]; then gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true; fi
+  - if [ "USE_LEGACY_BUNDLER" != "false" ]; then gem install bundler -v '< 2'; fi
 
 script:
   - bundle exec rake test_app
