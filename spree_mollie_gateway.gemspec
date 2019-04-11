@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
   spec.required_ruby_version = '>= 2.3.8'
 
-  spree_version = '>= 3.1.0', '< 5.0'
+  spree_version = '>= 3.5.0', '< 5.0'
   spec.add_dependency 'spree_backend', spree_version
   spec.add_dependency 'spree_core', spree_version
   spec.add_dependency 'spree_frontend', spree_version
