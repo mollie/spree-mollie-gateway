@@ -26,9 +26,25 @@ Spree::Order.class_eval do
     consider_risk
   end
 
+  def is_paid_with_mollie?
+    payments.collect(&:payment_method).any? {|pm| pm.type == 'Spree::Gateway::MollieGateway'}
+  end
+
+  def send_confirmation_email!
+    if !confirmation_delivered? && (paid? || authorized?)
+      deliver_order_confirmation_email
+    end
+  end
+
   def mollie_order
     Spree::Mollie::Order.new(self)
   end
+
+  def successful_payment
+    paid? || payments.any? {|p| p.after_pay_method? && p.authorized?}
+  end
+
+  alias paid_or_authorized? successful_payment
 
   def authorized?
     payments.last.authorized?
