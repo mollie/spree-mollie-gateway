@@ -90,7 +90,7 @@ RSpec.describe Spree::Mollie::OrderSerializer, type: :model do
       end
 
       it 'has streetAndNumber' do
-        expect(subject[:streetAndNumber]).to eq '10 Lovely Street'
+        expect(subject[:streetAndNumber]).to eq '10 Lovely Street Northwest'
       end
 
       it 'has city' do
