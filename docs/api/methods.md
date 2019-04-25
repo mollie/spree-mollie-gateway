@@ -285,21 +285,6 @@ Content-Type: application/json; charset=utf-8
       }
     }
   },
-  {
-    "resource": "method",
-    "id": "bitcoin",
-    "description": "Bitcoin",
-    "image": {
-      "size1x": "https://www.mollie.com/images/payscreen/methods/bitcoin.png",
-      "size2x": "https://www.mollie.com/images/payscreen/methods/bitcoin%402x.png"
-    },
-    "_links": {
-      "self": {
-        "href": "https://api.mollie.com/v2/methods/bitcoin",
-        "type": "application/hal+json"
-      }
-    }
-  }
 ]
 
 ```

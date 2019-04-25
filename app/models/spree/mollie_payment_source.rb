@@ -27,8 +27,6 @@ module Spree
         'SOFORT Banking'
       when ::Mollie::Method::BANKTRANSFER then
         'Bank transfer'
-      when ::Mollie::Method::BITCOIN then
-        'Bitcoin'
       when ::Mollie::Method::PAYPAL then
         'PayPal'
       when ::Mollie::Method::KBC then
@@ -52,7 +50,7 @@ module Spree
       when ::Mollie::Method::KLARNAPAYLATER then
         'Klarna Pay Later'
       else
-        'Mollie'
+        'Mollie (Unknown method)'
       end
     end
 
