@@ -27,8 +27,6 @@ module Spree
         'SOFORT Banking'
       when ::Mollie::Method::BANKTRANSFER then
         'Bank transfer'
-      when ::Mollie::Method::BITCOIN then
-        'Bitcoin'
       when ::Mollie::Method::PAYPAL then
         'PayPal'
       when ::Mollie::Method::KBC then
@@ -51,8 +49,11 @@ module Spree
         'Klarna Slice it'
       when ::Mollie::Method::KLARNAPAYLATER then
         'Klarna Pay Later'
+      # As of May 1st 2019, Bitcoin is no longer supported.
+      when 'bitcoin' then
+        'Bitcoin'
       else
-        'Mollie'
+        'Mollie (Unknown method)'
       end
     end
 
