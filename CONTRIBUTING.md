@@ -1,7 +1,5 @@
 # Contributing
 
-In the spirit of [free software][1], **everyone** is encouraged to help improve this project.
-
 Here are some ways *you* can contribute:
 
 * by using prerelease versions

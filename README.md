@@ -37,7 +37,7 @@ Please go to the [signup page](https://www.mollie.com/signup) to create a new Mo
 * Allow returning customers to <a href="https://www.mollie.com/en/features/checkout" title="One-click payments">use their previous payment details</a> and pay instantly.
 
 ## Requirements
-- Spree 3.3.x or newer.  
+- Spree 3.5 or newer.  
 
 ## Installation
 
@@ -97,7 +97,6 @@ Contact: [www.mollie.com](https://www.mollie.com) — info@mollie.com — +31 20
 + [More information about SOFORT Banking via Mollie](https://www.mollie.com/en/payments/sofort/)
 + [More information about SEPA Bank transfer via Mollie](https://www.mollie.com/en/payments/bank-transfer/)
 + [More information about SEPA Direct debit via Mollie](https://www.mollie.com/en/payments/direct-debit/)
-+ [More information about Bitcoin via Mollie](https://www.mollie.com/en/payments/bitcoin/)
 + [More information about PayPal via Mollie](https://www.mollie.com/en/payments/paypal/)
 + [More information about KBC/CBC Payment Button via Mollie](https://www.mollie.com/en/payments/kbc-cbc/)
 + [More information about Belfius Direct Net via Mollie](https://www.mollie.com/en/payments/belfius)
