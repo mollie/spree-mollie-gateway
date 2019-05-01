@@ -49,6 +49,9 @@ module Spree
         'Klarna Slice it'
       when ::Mollie::Method::KLARNAPAYLATER then
         'Klarna Pay Later'
+      # As of May 1st 2019, Bitcoin is no longer supported.
+      when 'bitcoin' then
+        'Bitcoin'
       else
         'Mollie (Unknown method)'
       end
