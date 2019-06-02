@@ -1,0 +1,4 @@
+en:
+  mollie-gateway:
+    issuers:
+      select: Select an issuer
