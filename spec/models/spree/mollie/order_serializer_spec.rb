@@ -102,7 +102,7 @@ RSpec.describe Spree::Mollie::OrderSerializer, type: :model do
       end
 
       it 'has country' do
-        expect(subject[:country]).to eq 'US'
+        expect(subject[:country]).to match(/^.{2}\b$/)
       end
 
       it 'has region' do
