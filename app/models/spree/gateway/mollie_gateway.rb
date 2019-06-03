@@ -99,7 +99,7 @@ module Spree
         if reimbursement
           mollie_order = ::Mollie::Order.get(payment.source.payment_id, {api_key: get_preference(:api_key)})
           mollie_order_refund_lines = reimbursement.return_items.map do |ri|
-            line = mollie_order.lines.detect {|line| line.sku == "#{ri.inventory_unit.line_item.id}-#{ri.variant.sku}"}
+            line = mollie_order.lines.detect {|line| line.sku == ri.inventory_unit.line_item.mollie_identifier}
             {id: line.id, quantity: ri.inventory_unit.line_item.quantity} if line
           end.compact
           mollie_order.refund!({lines: mollie_order_refund_lines, api_key: get_preference(:api_key)})
