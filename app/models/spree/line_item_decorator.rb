@@ -2,11 +2,11 @@ Spree::LineItem.class_eval do
   money_methods :discount_amount, :vat_amount
 
   def discount_amount
-    adjustments.non_tax.sum(:amount).abs
+    adjustments.eligible.non_tax.sum(:amount).abs
   end
 
   def vat_amount
-    adjustments.tax.sum(:amount).abs
+    adjustments.eligible.tax.sum(:amount).abs
   end
 
   def vat_rate
