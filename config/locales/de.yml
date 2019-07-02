@@ -1,0 +1,4 @@
+de:
+  mollie-gateway:
+    issuers:
+      select: Wählen Sie einen Bearbeiter

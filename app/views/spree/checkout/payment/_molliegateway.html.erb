@@ -9,7 +9,14 @@
         <%= method.description %>
       </label>
 
-      <%= select_tag "#{prefix}[issuer]", options_for_select(method.issuers.collect {|p| [p['name'], p['id']]}), {class: 'form-control js-mollie-issuers mollie-issuer-list', disabled: true, prompt: 'Select an issuer', data: {method: method.id}} if method.issuers.present? %>
+      <%= select_tag "#{prefix}[issuer]",
+                     options_for_select(method.issuers.collect {|p| [p['name'], p['id']]}),
+                     {
+                         class: 'form-control js-mollie-issuers mollie-issuer-list',
+                         disabled: true,
+                         prompt: t('mollie-gateway.issuers.select'),
+                         data: {method: method.id}
+                     } if method.issuers.present? %>
     </div>
   <% end %>
 </ul>

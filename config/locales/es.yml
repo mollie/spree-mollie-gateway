@@ -1,0 +1,4 @@
+es:
+  mollie-gateway:
+    issuers:
+      select: Seleccione un emisor

@@ -1,0 +1,4 @@
+it:
+  mollie-gateway:
+    issuers:
+      select: Seleziona una Banca
