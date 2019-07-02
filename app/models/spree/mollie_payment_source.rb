@@ -51,6 +51,8 @@ module Spree
         'Klarna Pay Later'
       when ::Mollie::Method::PRZELEWY24 then
         'Przelewy24'
+      when ::Mollie::Method::APPLEPAY then
+        'Apple Pay'
       # As of May 1st 2019, Bitcoin is no longer supported.
       when 'bitcoin' then
         'Bitcoin'
