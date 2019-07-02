@@ -1,0 +1,4 @@
+nl:
+  mollie-gateway:
+    issuers:
+      select: Selecteer uw bank

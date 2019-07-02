@@ -1,0 +1,4 @@
+fr:
+  mollie-gateway:
+    issuers:
+      select: Sélectionner un émetteur
