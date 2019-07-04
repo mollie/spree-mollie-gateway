@@ -193,7 +193,7 @@ module Spree
             value: format_money(line.display_vat_amount.money)
           },
           vatRate: line.vat_rate * 100,
-          sku: "#{line.id}-#{line.variant.sku}"
+          sku: line.mollie_identifier
         }
       end
     end

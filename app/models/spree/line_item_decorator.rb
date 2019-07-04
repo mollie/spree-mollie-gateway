@@ -9,6 +9,10 @@ Spree::LineItem.class_eval do
     adjustments.eligible.tax.sum(:amount).abs
   end
 
+  def mollie_identifier
+    "#{line.id}-#{line.variant.sku}"
+  end
+
   def vat_rate
     if adjustments.tax.any?
       # Spree allows line items to have multiple TaxRate adjustments.
