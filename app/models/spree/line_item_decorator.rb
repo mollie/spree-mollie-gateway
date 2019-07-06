@@ -10,7 +10,7 @@ Spree::LineItem.class_eval do
   end
 
   def mollie_identifier
-    "#{line.id}-#{line.variant.sku}"
+    "#{id}-#{variant.sku}"
   end
 
   def vat_rate
