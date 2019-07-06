@@ -105,3 +105,5 @@ Contact: [www.mollie.com](https://www.mollie.com) — info@mollie.com — +31 20
 + [More information about Gift cards via Mollie](https://www.mollie.com/en/payments/gift-cards)
 + [More information about EPS via Mollie](https://www.mollie.com/en/payments/eps)
 + [More information about Giropay via Mollie](https://www.mollie.com/en/payments/giropay)
++ [More information about Apple Pay via Mollie](https://www.mollie.com/en/payments/apple-pay)
++ [More information about Przelewy24 via Mollie](https://www.mollie.com/en/payments/przelewy24)
