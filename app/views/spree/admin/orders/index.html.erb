@@ -50,21 +50,21 @@
         <div class="col-xs-12 col-md-4">
           <div class="form-group">
             <%= label_tag :q_state_eq, Spree.t(:status) %>
-            <%= f.select :state_eq, Spree::Order.state_machines[:state].states.map {|s| [Spree.t("order_state.#{s.name}"), s.value]}, { include_blank: true }, class: 'select2 js-filterable' %>
+            <%= f.select :state_eq, Spree::Order.state_machines[:state].states.map { |s| [Spree.t("order_state.#{s.name}"), s.value] }, {include_blank: true}, class: 'select2 js-filterable' %>
           </div>
         </div>
 
         <div class="col-xs-12 col-md-4">
           <div class="form-group">
             <%= label_tag :q_payment_state_eq, Spree.t(:payment_state) %>
-            <%= f.select :payment_state_eq, Spree::Order::PAYMENT_STATES.map {|s| [Spree.t("payment_states.#{s}"), s]}, { include_blank: true }, class: 'select2 js-filterable' %>
+            <%= f.select :payment_state_eq, Spree::Order::PAYMENT_STATES.map { |s| [Spree.t("payment_states.#{s}"), s] }, {include_blank: true}, class: 'select2 js-filterable' %>
           </div>
         </div>
 
         <div class="col-xs-12 col-md-4">
           <div class="form-group">
             <%= label_tag :q_shipment_state_eq, Spree.t(:shipment_state) %>
-            <%= f.select :shipment_state_eq, Spree::Order::SHIPMENT_STATES.map {|s| [Spree.t("shipment_states.#{s}"), s]}, { include_blank: true }, class: 'select2 js-filterable' %>
+            <%= f.select :shipment_state_eq, Spree::Order::SHIPMENT_STATES.map { |s| [Spree.t("shipment_states.#{s}"), s] }, {include_blank: true}, class: 'select2 js-filterable' %>
           </div>
         </div>
 
@@ -107,14 +107,14 @@
         <div class="col-xs-12 col-md-4">
           <div class="form-group">
             <%= label_tag :q_promotions_id_in, Spree.t(:promotion) %>
-            <%= f.select :promotions_id_in, Spree::Promotion.applied.pluck(:name, :id), { include_blank: true }, class: 'select2' %>
+            <%= f.select :promotions_id_in, Spree::Promotion.applied.pluck(:name, :id), {include_blank: true}, class: 'select2' %>
           </div>
         </div>
 
         <div class="col-xs-12 col-md-4">
           <div class="form-group">
             <%= label_tag :q_store_id_in, Spree.t(:store) %>
-            <%= f.select :store_id_in, Spree::Store.order("#{Spree::Store.table_name}.name").pluck(:name, :id), { include_blank: true }, class: 'select2' %>
+            <%= f.select :store_id_in, Spree::Store.order("#{Spree::Store.table_name}.name").pluck(:name, :id), {include_blank: true}, class: 'select2' %>
           </div>
         </div>
 
@@ -159,19 +159,19 @@
     <thead>
     <tr data-hook="admin_orders_index_headers">
       <% if @show_only_completed %>
-        <th><%= sort_link @search, :completed_at,   I18n.t(:completed_at, scope: 'activerecord.attributes.spree/order') %></th>
+        <th><%= sort_link @search, :completed_at, I18n.t(:completed_at, scope: 'activerecord.attributes.spree/order') %></th>
       <% else %>
-        <th><%= sort_link @search, :created_at,     I18n.t(:created_at, scope: 'activerecord.attributes.spree/order') %></th>
+        <th><%= sort_link @search, :created_at, I18n.t(:created_at, scope: 'activerecord.attributes.spree/order') %></th>
       <% end %>
-      <th><%= sort_link @search, :number,           I18n.t(:number, scope: 'activerecord.attributes.spree/order') %></th>
+      <th><%= sort_link @search, :number, I18n.t(:number, scope: 'activerecord.attributes.spree/order') %></th>
       <th><%= sort_link @search, :considered_risky, I18n.t(:considered_risky, scope: 'activerecord.attributes.spree/order') %></th>
-      <th><%= sort_link @search, :state,            I18n.t(:state, scope: 'activerecord.attributes.spree/order') %></th>
-      <th><%= sort_link @search, :payment_state,    I18n.t(:payment_state, scope: 'activerecord.attributes.spree/order') %></th>
+      <th><%= sort_link @search, :state, I18n.t(:state, scope: 'activerecord.attributes.spree/order') %></th>
+      <th><%= sort_link @search, :payment_state, I18n.t(:payment_state, scope: 'activerecord.attributes.spree/order') %></th>
       <% if Spree::Order.checkout_step_names.include?(:delivery) %>
         <th><%= sort_link @search, :shipment_state, I18n.t(:shipment_state, scope: 'activerecord.attributes.spree/order') %></th>
       <% end %>
-      <th><%= sort_link @search, :email,            I18n.t(:email, scope: 'activerecord.attributes.spree/order') %></th>
-      <th><%= sort_link @search, :total,            I18n.t(:total, scope: 'activerecord.attributes.spree/order') %></th>
+      <th><%= sort_link @search, :email, I18n.t(:email, scope: 'activerecord.attributes.spree/order') %></th>
+      <th><%= sort_link @search, :total, I18n.t(:total, scope: 'activerecord.attributes.spree/order') %></th>
       <th data-hook="admin_orders_index_header_actions" class="actions"></th>
     </tr>
     </thead>
@@ -192,12 +192,17 @@
           <span class="icon icon-filter filterable js-add-filter" data-ransack-field="q_state_eq" data-ransack-value="<%= order.state %>"></span>
         </td>
         <td>
-          <% if order.payments.count > 0 && order.payments.last.source.present? %>
-            <% if order.payments.last.after_pay_method? && order.payments.last.authorized? %>
-              <span class="label label-authorized"><%= link_to 'authorized', admin_order_payments_path(order) %></span>
-            <% else %>
-              <span class="label label-<%= order.payments.last.source.status %>"><%= link_to order.payments.last.source.status, admin_order_payments_path(order) %></span>
+          <% if order.is_paid_with_mollie? %>
+            <% if order.payments.count > 0 && order.payments.last.source.present? %>
+              <% if order.payments.last.after_pay_method? && order.payments.last.authorized? %>
+                <span class="label label-authorized"><%= link_to 'authorized', admin_order_payments_path(order) %></span>
+              <% else %>
+                <span class="label label-<%= order.payments.last.source.status %>"><%= link_to order.payments.last.source.status, admin_order_payments_path(order) %></span>
+              <% end %>
             <% end %>
+          <% else %>
+            <span class="label label-<%= order.payment_state %>"><%= link_to Spree.t("payment_states.#{order.payment_state}"), admin_order_payments_path(order) %></span>
+            <span class="icon icon-filter filterable js-add-filter" data-ransack-field="q_payment_state_eq" data-ransack-value="<%= order.payment_state %>"></span>
           <% end %>
         </td>
         <% if Spree::Order.checkout_step_names.include?(:delivery) %>
