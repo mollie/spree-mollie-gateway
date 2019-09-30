@@ -20,7 +20,7 @@ module Spree
     end
   end
 
-  CheckoutController.class_eval do
+  module CheckoutControllerDecorator
     prepend CheckoutWithMollie
 
     private
@@ -38,4 +38,7 @@ module Spree
       (params[:state] === 'payment') && params[:order][:payments_attributes]
     end
   end
+
+  CheckoutController.prepend(CheckoutControllerDecorator)
+
 end
