@@ -27,7 +27,7 @@ Spree::Order.class_eval do
   end
 
   def is_paid_with_mollie?
-    payments.collect(&:payment_method).any? {|pm| pm.type == 'Spree::Gateway::MollieGateway'}
+    payments.any? && payments.last&.payment_method&.type == 'Spree::Gateway::MollieGateway'
   end
 
   def send_confirmation_email!
