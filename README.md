@@ -84,7 +84,7 @@ If you wish to learn more about our API, please visit the [Mollie API Documentat
 Want to help us make our API client even better? We take [pull requests](https://github.com/mollie/mollie-api-ruby/pulls?utf8=%E2%9C%93&q=is%3Apr), sure. But how would you like to contribute to a technology oriented organization? Mollie is hiring developers and system engineers. [Check out our vacancies](https://jobs.mollie.com/) or [get in touch](mailto:recruitment@mollie.com).
 
 ## License
-[BSD (Berkeley Software Distribution) License](https://opensource.org/licenses/bsd-license.php). Copyright (c) 2014-2018, Mollie B.V.
+[BSD (Berkeley Software Distribution) License](https://opensource.org/licenses/bsd-license.php). Copyright (c) 2014-2019, Mollie B.V.
 
 ## Support
 Contact: [www.mollie.com](https://www.mollie.com) — info@mollie.com — +31 20-612 88 55
