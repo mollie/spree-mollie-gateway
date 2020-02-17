@@ -52,7 +52,7 @@ module Spree
 
       def transition_to_failed!
         @spree_payment.failure! unless @spree_payment.failed?
-        @spree_payment.order.update_attributes(state: 'payment', completed_at: nil) unless @spree_payment.order.paid_or_authorized?
+        @spree_payment.order.update(state: 'payment', completed_at: nil) unless @spree_payment.order.paid_or_authorized?
         MollieLogger.debug("Mollie order is #{@mollie_order.status} and will be marked as failed")
       end
 
