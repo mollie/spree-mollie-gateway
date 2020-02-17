@@ -21,10 +21,6 @@ module Spree
   end
 
   module CheckoutControllerDecorator
-    prepend CheckoutWithMollie
-
-    private
-
     def payment_method_id_param
       params[:order][:payments_attributes].first[:payment_method_id]
     end
@@ -39,6 +35,7 @@ module Spree
     end
   end
 
+  CheckoutController.prepend(CheckoutWithMollie)
   CheckoutController.prepend(CheckoutControllerDecorator)
 
 end

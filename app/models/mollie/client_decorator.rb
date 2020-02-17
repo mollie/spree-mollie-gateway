@@ -1,4 +1,4 @@
-Mollie::Client.class_eval do
+module Mollie::ClientDecorator
   attr_accessor :version_strings
 
   def initialize(api_key = nil)
@@ -11,3 +11,5 @@ Mollie::Client.class_eval do
     add_version_string OpenSSL::OPENSSL_VERSION.split(' ').slice(0, 2).join '/'
   end
 end
+
+Mollie::Client.prepend(Mollie::ClientDecorator)
