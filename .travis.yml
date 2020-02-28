@@ -6,7 +6,6 @@ cache: bundler
 rvm:
   - 2.5.1
   - 2.6.5
-  - 2.7.0
 
 gemfile:
   - gemfiles/spree_3_5.gemfile
