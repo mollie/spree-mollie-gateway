@@ -1,4 +1,4 @@
-Spree::Payment.class_eval do
+module Spree::PaymentDecorator
   def transaction_id
     if payment_method.is_a? Spree::Gateway::MollieGateway
       source.transaction_id
@@ -37,3 +37,5 @@ Spree::Payment.class_eval do
     end
   end
 end
+
+Spree::Payment.prepend(Spree::PaymentDecorator)

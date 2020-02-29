@@ -16,6 +16,10 @@ require 'spree/testing_support/order_walkthrough'
 require 'spree/testing_support/url_helpers'
 require 'spree_mollie_gateway/factories'
 
+ActsAsTaggableOn::Tagging.class_eval do
+  self.table_name = 'spree_taggings'
+end if defined? ActsAsTaggableOn::Tagging
+
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 

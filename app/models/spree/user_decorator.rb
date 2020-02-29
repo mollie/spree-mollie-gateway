@@ -1,5 +1,9 @@
-Spree.user_class.class_eval do
-  after_create :create_mollie_customer
+module Spree::UserDecorator
+
+  def self.prepended(base)
+    base.after_create :create_mollie_customer
+  end
+
 
   def create_mollie_customer
     # Don't create Mollie customers if spree_auth_devise is not installed.
@@ -12,3 +16,5 @@ Spree.user_class.class_eval do
     update mollie_customer_id: mollie_customer.id
   end
 end
+
+Spree.user_class.prepend(Spree::UserDecorator)
