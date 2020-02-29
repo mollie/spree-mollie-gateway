@@ -1,4 +1,5 @@
-Spree::Order.class_eval do
+module Spree::OrderDecorator
+  extend Spree::DisplayMoney
   money_methods :order_adjustment_total, :shipping_discount
 
   # Make sure the order confirmation is delivered when the order has been paid for.
@@ -58,3 +59,5 @@ Spree::Order.class_eval do
     order_adjustment_total.abs > 0
   end
 end
+
+Spree::Order.prepend(Spree::OrderDecorator)

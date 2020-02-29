@@ -1,4 +1,4 @@
-Spree::Address.class_eval do
+module Spree::AddressDecorator
   def active_merchant_hash
     {
       name: full_name,
@@ -14,3 +14,5 @@ Spree::Address.class_eval do
     }
   end
 end
+
+Spree::Address.prepend(Spree::AddressDecorator)

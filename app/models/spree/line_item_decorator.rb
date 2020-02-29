@@ -1,4 +1,5 @@
-Spree::LineItem.class_eval do
+module Spree::LineItemDecorator
+  extend Spree::DisplayMoney
   money_methods :discount_amount, :vat_amount
 
   def discount_amount
@@ -27,3 +28,5 @@ Spree::LineItem.class_eval do
     end
   end
 end
+
+Spree::LineItem.prepend(Spree::LineItemDecorator)
