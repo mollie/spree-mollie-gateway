@@ -44,7 +44,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'factory_bot', '~> 4.11.1'
   spec.add_development_dependency 'ffaker'
   spec.add_development_dependency 'mysql2'
-  spec.add_development_dependency "rake", ">= 12.3.3"
+  spec.add_development_dependency 'rake', '~> 12.3', '> 12.3.2'
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'rspec-rails', '~> 3.7.2'
   spec.add_development_dependency 'rubocop-rspec'
