@@ -6,7 +6,10 @@ module Spree
 
     def after_ship
       super
-      create_mollie_shipment!
+
+      if order.is_paid_with_mollie?
+        create_mollie_shipment!
+      end
     end
 
     def create_mollie_shipment!
