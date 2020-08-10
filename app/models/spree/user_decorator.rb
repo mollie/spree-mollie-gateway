@@ -1,7 +1,7 @@
 module Spree::UserDecorator
 
   def self.prepended(base)
-    base.after_commit :ensure_mollie_customer
+    base.after_commit :ensure_mollie_customer, on: %i[create update]
   end
 
 
