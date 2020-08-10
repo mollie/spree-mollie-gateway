@@ -1,16 +1,17 @@
 module Spree::UserDecorator
 
   def self.prepended(base)
-    base.after_create :create_mollie_customer
+    base.after_commit :ensure_mollie_customer, on: %i[create update]
   end
 
+  def ensure_mollie_customer
+    return if try(:mollie_customer_id).present?
 
-  def create_mollie_customer
     # Don't create Mollie customers if spree_auth_devise is not installed.
     return unless defined? Spree::User
 
     mollie_gateway = Spree::PaymentMethod.find_by_type 'Spree::Gateway::MollieGateway'
-    return unless mollie_gateway.present?
+    return unless mollie_gateway&.active?
 
     mollie_customer = mollie_gateway.create_customer(self)
     update mollie_customer_id: mollie_customer.id
