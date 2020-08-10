@@ -5,7 +5,7 @@ module Spree::UserDecorator
   end
 
   def ensure_mollie_customer
-    return if mollie_customer_id&.present?
+    return if try(:mollie_customer_id).present?
 
     # Don't create Mollie customers if spree_auth_devise is not installed.
     return unless defined? Spree::User
