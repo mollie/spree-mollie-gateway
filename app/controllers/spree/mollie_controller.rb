@@ -14,6 +14,8 @@ module Spree
       MollieLogger.debug("Redirect URL visited for order #{params[:order_number]}")
 
       order = order.reload
+      
+      flash['order_completed'] = order.completed?
 
       # Order is paid for or authorized (e.g. Klarna Pay Later)
       redirect_to order.paid? || payment.pending? ? order_path(order) : checkout_state_path(:payment)
