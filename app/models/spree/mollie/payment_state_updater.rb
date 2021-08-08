@@ -29,7 +29,7 @@ module Spree
         else
           MollieLogger.debug("Unhandled Mollie payment state received: #{@mollie_order.status}. Therefore we did not update the payment state.")
           unless @spree_payment.order.paid_or_authorized?
-            @spree_payment.order.update_attributes(state: 'payment', completed_at: nil)
+            @spree_payment.order.update(state: 'payment', completed_at: nil)
           end
         end
 
@@ -69,7 +69,7 @@ module Spree
       def complete_order!
         return if @spree_payment.order.completed?
         @spree_payment.order.finalize!
-        @spree_payment.order.update_attributes(state: 'complete', completed_at: Time.now)
+        @spree_payment.order.update(state: 'complete', completed_at: Time.now)
         MollieLogger.debug('Order will be finalized and order confirmation will be sent.')
       end
     end
