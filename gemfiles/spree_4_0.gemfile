@@ -3,8 +3,8 @@
 source "https://rubygems.org"
 
 gem "mollie-api-ruby", "~> 4.2.0"
+gem "rails", "~> 6.0.0"
 gem "spree", "~> 4.0.3"
 gem "spree_api", "~> 4.0.3"
-gem "rails", "~> 6.0.0"
 
 gemspec path: "../"
