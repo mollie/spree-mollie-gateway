@@ -53,5 +53,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'simplecov'
   spec.add_development_dependency 'sqlite3'
 
-  spec.add_runtime_dependency 'mollie-api-ruby', '~> 4.2.0'
+  spec.add_runtime_dependency 'mollie-api-ruby', '~> 4.9.0'
 end
