@@ -20,8 +20,9 @@ module Spree::OrderDecorator
 
     touch :completed_at
 
-    if !confirmation_delivered? && (paid? || authorized?)
-      deliver_order_confirmation_email
+    if (paid? || authorized?)
+      deliver_order_confirmation_email unless confirmation_delivered?
+      deliver_store_owner_order_notification_email if deliver_store_owner_order_notification_email?
     end
 
     consider_risk
